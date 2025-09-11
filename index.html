@@ -6,17 +6,18 @@
   <title>Pro Trading Calculator</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(#343540, #242831);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 15px;
-      transition: background 0.3s, color 0.3s;
-    }
+  font-family: Arial, sans-serif;
+  background: linear-gradient(#343540, #242831);
+  color: white;
+  display: flex;
+  justify-content: center;   /* keep horizontal centering */
+  align-items: flex-start;   /* push calculator to the top */
+  min-height: 100vh;
+  margin: 0;
+  padding: 30px 15px;        /* add top padding */
+  transition: background 0.3s, color 0.3s;
+}
+
     body.light {
       background: linear-gradient(#f0f0f0, #d9d9d9);
       color: black;
