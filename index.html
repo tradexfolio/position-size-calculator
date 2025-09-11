@@ -4,20 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pro Trading Calculator</title>
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
   <style>
     body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(#343540, #242831);
-  color: white;
-  display: flex;
-  justify-content: center;   /* keep horizontal centering */
-  align-items: flex-start;   /* push calculator to the top */
-  min-height: 100vh;
-  margin: 0;
-  padding: 30px 15px;        /* add top padding */
-  transition: background 0.3s, color 0.3s;
-}
-
+      font-family: Arial, sans-serif;
+      background: linear-gradient(#343540, #242831);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;  /* push to top */
+      min-height: 100vh;
+      margin: 0;
+      padding: 30px 15px; /* padding at top */
+      transition: background 0.3s, color 0.3s;
+    }
     body.light {
       background: linear-gradient(#f0f0f0, #d9d9d9);
       color: black;
@@ -178,20 +178,27 @@
     <input type="number" id="balance" placeholder="10000">
 
     <label>Select Instrument</label>
-    <select id="instrumentSelect">
+    <select id="instrumentSelect" placeholder="Type to search...">
       <option value="">-- Choose Instrument --</option>
-      <option value="EURUSD">EURUSD</option>
-      <option value="GBPUSD">GBPUSD</option>
-      <option value="USDJPY">USDJPY</option>
-      <option value="GBPJPY">GBPJPY</option>
-      <option value="XAUUSD">XAUUSD</option>
-      <option value="XAGUSD">XAGUSD</option>
-      <option value="US30">US30</option>
-      <option value="NAS100">NAS100</option>
-      <option value="SPX500">SPX500</option>
-      <option value="GER40">GER40</option>
-      <option value="BTCUSD">BTCUSD</option>
-      <option value="ETHUSD">ETHUSD</option>
+      
+      <optgroup label="Popular Instruments">
+        <option value="EURUSD">EURUSD</option>
+        <option value="GBPUSD">GBPUSD</option>
+        <option value="AUDUSD">AUDUSD</option>
+        <option value="GBPJPY">GBPJPY</option>
+        <option value="USDJPY">USDJPY</option>
+        <option value="XAUUSD">XAUUSD (Gold)</option>
+        <option value="NAS100">NAS100 (Nasdaq)</option>
+        <option value="SPX500">S&P500</option>
+        <option value="GER40">GER30 / GER40</option>
+      </optgroup>
+
+      <optgroup label="Other Instruments">
+        <option value="XAGUSD">XAGUSD (Silver)</option>
+        <option value="US30">US30 (Dow Jones)</option>
+        <option value="BTCUSD">BTCUSD (Bitcoin)</option>
+        <option value="ETHUSD">ETHUSD (Ethereum)</option>
+      </optgroup>
     </select>
 
     <div class="row">
@@ -222,11 +229,19 @@
     <div class="result" id="result"></div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
   <script>
+    // Enable searchable dropdown
+    new TomSelect("#instrumentSelect",{
+      create: false,
+      sortField: { field: "text", direction: "asc" }
+    });
+
     // Default contract sizes & pip sizes
     const defaults = {
       "EURUSD": {contract: 100000, pip: 0.0001},
       "GBPUSD": {contract: 100000, pip: 0.0001},
+      "AUDUSD": {contract: 100000, pip: 0.0001},
       "USDJPY": {contract: 100000, pip: 0.01},
       "GBPJPY": {contract: 100000, pip: 0.01},
       "XAUUSD": {contract: 100, pip: 0.1},
