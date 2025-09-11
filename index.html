@@ -13,32 +13,38 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 20px;
+      margin: 0;
+      padding: 15px;
     }
     .calculator {
       background: #15181d;
       padding: 20px;
       border-radius: 20px;
-      width: 350px;
+      width: 100%;
+      max-width: 400px; /* limits size on desktop */
       box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
     }
     .calculator h2 {
       text-align: center;
       margin-bottom: 15px;
+      font-size: 1.5rem;
     }
     .calculator label {
       display: block;
-      margin-top: 10px;
-      font-size: 14px;
+      margin-top: 12px;
+      font-size: 0.9rem;
     }
-    .calculator input, .calculator select {
+    .calculator input,
+    .calculator select {
       width: 100%;
-      padding: 8px;
-      margin-top: 5px;
+      padding: 10px;
+      margin-top: 6px;
       border: none;
       border-radius: 8px;
       background: #242831;
       color: white;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
     .calculator button {
       margin-top: 20px;
@@ -48,17 +54,37 @@
       border-radius: 10px;
       background: #343540;
       color: white;
-      font-size: 16px;
+      font-size: 1rem;
       cursor: pointer;
+      transition: background 0.2s;
     }
     .calculator button:hover {
       background: #3d3f4d;
     }
     .result {
-      margin-top: 15px;
+      margin-top: 18px;
       font-weight: bold;
       text-align: center;
-      font-size: 18px;
+      font-size: 1.1rem;
+    }
+
+    /* 📱 Mobile tweaks */
+    @media (max-width: 480px) {
+      .calculator {
+        padding: 15px;
+        border-radius: 15px;
+      }
+      .calculator h2 {
+        font-size: 1.3rem;
+      }
+      .calculator input,
+      .calculator select {
+        font-size: 0.95rem;
+        padding: 9px;
+      }
+      .calculator button {
+        font-size: 0.95rem;
+      }
     }
   </style>
 </head>
@@ -99,7 +125,7 @@
     const pipValues = {
       "EURUSD": 10,   // $10 per pip per lot
       "GBPJPY": 9,    // ~$9 per pip per lot
-      "XAUUSD": 1,    // $1 per point per lot (depends on broker)
+      "XAUUSD": 1,    // $1 per point per lot
       "GER40": 1,     // €1 per point per lot
       "US30": 1       // $1 per point per lot
     };
