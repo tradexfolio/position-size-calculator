@@ -5,35 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pro Position Size Calculator</title>
   <style>
+    :root {
+      --bg-gradient: linear-gradient(#343540, #242831);
+      --card-bg: #15181d;
+      --input-bg: #242831;
+      --text-color: white;
+      --btn-bg: #343540;
+      --btn-hover: #3d3f4d;
+    }
+
+    body.light {
+      --bg-gradient: linear-gradient(#f5f6fa, #dcdde1);
+      --card-bg: #ffffff;
+      --input-bg: #f1f2f6;
+      --text-color: #2f3640;
+      --btn-bg: #40739e;
+      --btn-hover: #487eb0;
+    }
+
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(#343540, #242831);
-      color: white;
+      background: var(--bg-gradient);
+      color: var(--text-color);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       margin: 0;
       padding: 15px;
+      transition: background 0.3s, color 0.3s;
     }
+
     .calculator {
-      background: #15181d;
+      background: var(--card-bg);
       padding: 20px;
       border-radius: 20px;
       width: 100%;
-      max-width: 400px; /* limits size on desktop */
+      max-width: 400px;
       box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
+      transition: background 0.3s;
+      position: relative;
     }
+
     .calculator h2 {
       text-align: center;
       margin-bottom: 15px;
       font-size: 1.5rem;
     }
+
     .calculator label {
       display: block;
       margin-top: 12px;
       font-size: 0.9rem;
     }
+
     .calculator input,
     .calculator select {
       width: 100%;
@@ -41,31 +66,56 @@
       margin-top: 6px;
       border: none;
       border-radius: 8px;
-      background: #242831;
-      color: white;
+      background: var(--input-bg);
+      color: var(--text-color);
       font-size: 1rem;
       box-sizing: border-box;
+      transition: background 0.3s, color 0.3s;
     }
+
     .calculator button {
       margin-top: 20px;
       width: 100%;
       padding: 12px;
       border: none;
       border-radius: 10px;
-      background: #343540;
+      background: var(--btn-bg);
       color: white;
       font-size: 1rem;
       cursor: pointer;
       transition: background 0.2s;
     }
+
     .calculator button:hover {
-      background: #3d3f4d;
+      background: var(--btn-hover);
     }
+
     .result {
       margin-top: 18px;
       font-weight: bold;
       text-align: center;
       font-size: 1.1rem;
+    }
+
+    /* 🌙 Toggle Button */
+    .theme-toggle {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: 2px solid var(--btn-bg);
+      color: var(--text-color);
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s, color 0.3s, border 0.3s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--btn-bg);
+      color: white;
     }
 
     /* 📱 Mobile tweaks */
@@ -90,6 +140,7 @@
 </head>
 <body>
   <div class="calculator">
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
     <h2>Pro Position Size Calculator</h2>
 
     <label>Account Balance ($)</label>
@@ -123,11 +174,11 @@
 
   <script>
     const pipValues = {
-      "EURUSD": 10,   // $10 per pip per lot
-      "GBPJPY": 9,    // ~$9 per pip per lot
-      "XAUUSD": 1,    // $1 per point per lot
-      "GER40": 1,     // €1 per point per lot
-      "US30": 1       // $1 per point per lot
+      "EURUSD": 10,
+      "GBPJPY": 9,
+      "XAUUSD": 1,
+      "GER40": 1,
+      "US30": 1
     };
 
     function calculate() {
@@ -148,6 +199,16 @@
 
       document.getElementById('result').innerText =
         `Lot Size: ${lotSize.toFixed(2)} lots`;
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+      const btn = document.querySelector(".theme-toggle");
+      if (document.body.classList.contains("light")) {
+        btn.innerText = "☀️";
+      } else {
+        btn.innerText = "🌙";
+      }
     }
   </script>
 </body>
