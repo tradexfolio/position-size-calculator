@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pro Position Size Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(#343540, #242831);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .calculator {
+      background: #15181d;
+      padding: 20px;
+      border-radius: 20px;
+      width: 350px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
+    }
+    .calculator h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .calculator label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .calculator input, .calculator select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 8px;
+      background: #242831;
+      color: white;
+    }
+    .calculator button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #343540;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .calculator button:hover {
+      background: #3d3f4d;
+    }
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2>Pro Position Size Calculator</h2>
+
+    <label>Account Balance ($)</label>
+    <input type="number" id="balance" placeholder="10000">
+
+    <label>Risk Mode</label>
+    <select id="riskMode">
+      <option value="percent">Risk %</option>
+      <option value="fixed">Fixed $</option>
+    </select>
+
+    <label>Risk Value</label>
+    <input type="number" id="risk" placeholder="1">
+
+    <label>Stop Loss (pips/points)</label>
+    <input type="number" id="sl" placeholder="50">
+
+    <label>Select Instrument</label>
+    <select id="instrument">
+      <option value="EURUSD">EURUSD</option>
+      <option value="GBPJPY">GBPJPY</option>
+      <option value="XAUUSD">XAUUSD (Gold)</option>
+      <option value="GER40">GER40 (DAX)</option>
+      <option value="US30">US30 (Dow Jones)</option>
+    </select>
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const pipValues = {
+      "EURUSD": 10,   // $10 per pip per lot
+      "GBPJPY": 9,    // ~$9 per pip per lot
+      "XAUUSD": 1,    // $1 per point per lot (depends on broker)
+      "GER40": 1,     // €1 per point per lot
+      "US30": 1       // $1 per point per lot
+    };
+
+    function calculate() {
+      let balance = parseFloat(document.getElementById('balance').value);
+      let riskMode = document.getElementById('riskMode').value;
+      let risk = parseFloat(document.getElementById('risk').value);
+      let sl = parseFloat(document.getElementById('sl').value);
+      let instrument = document.getElementById('instrument').value;
+
+      if(isNaN(balance) || isNaN(risk) || isNaN(sl)){
+        document.getElementById('result').innerText = "⚠ Please enter all fields!";
+        return;
+      }
+
+      let riskAmount = (riskMode === "percent") ? (balance * risk / 100) : risk;
+      let pipValue = pipValues[instrument] || 10;
+      let lotSize = riskAmount / (sl * pipValue);
+
+      document.getElementById('result').innerText =
+        `Lot Size: ${lotSize.toFixed(2)} lots`;
+    }
+  </script>
+</body>
+</html>
