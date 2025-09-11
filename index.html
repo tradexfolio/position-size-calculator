@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pro Position Size Calculator — Corrected Pip Values</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(#343540,#242831);
+      color: white;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+      margin:0;
+      padding:15px;
+      transition:background .3s,color .3s;
+    }
+    body.light { background:linear-gradient(#f0f0f0,#d9d9d9); color:#111; }
+    body.light .calculator { background:#fff; color:#111; }
+    body.light input, body.light select { background:#f5f5f5; color:#111; }
+    .calculator {
+      background:#15181d;
+      padding:20px;
+      border-radius:16px;
+      width:100%; max-width:520px;
+      box-shadow:0 6px 24px rgba(0,0,0,.45);
+      position:relative;
+    }
+    .calculator h2 { text-align:center; margin:0 0 12px; font-size:1.4rem; }
+    label { display:block; margin-top:12px; font-size:.95rem; }
+    input, select, button { width:100%; padding:10px; margin-top:6px; border-radius:8px; border:0; background:#242831; color:white; box-sizing:border-box; font-size:1rem; }
+    button { cursor:pointer; background:#343540; transition:background .15s; }
+    button:hover { background:#3d3f4d; }
+    .row { display:flex; gap:10px; align-items:center; margin-top:12px; }
+    .row label { flex:1; margin:0; font-size:.9rem; }
+    .row select, .row input { flex:1; margin-top:6px; }
+    .result { margin-top:16px; font-weight:700; text-align:center; font-size:1.05rem; }
+    .note { font-size:.85rem; opacity:.85; margin-top:6px; text-align:center; }
+    .toggle-container { position:absolute; top:12px; right:12px; }
+    .toggle-switch { position:relative; width:50px; height:24px; background:#555; border-radius:20px; display:flex; align-items:center; justify-content:space-between; padding:0 6px; color:white; cursor:pointer; box-sizing:border-box; }
+    .toggle-circle { position:absolute; top:2px; left:2px; width:20px; height:20px; background:#fff; border-radius:50%; transition:left .25s; }
+    .toggle-switch.active { background:#4caf50; }
+    .toggle-switch.active .toggle-circle { left:28px; }
+    /* autocomplete */
+    .autocomplete-list { position:absolute; background:#242831; border-radius:6px; max-height:180px; overflow:auto; width:calc(100% - 40px); z-index:30; box-shadow:0 8px 20px rgba(0,0,0,.5); display:none; }
+    .autocomplete-item { padding:8px 10px; cursor:pointer; }
+    .autocomplete-item:hover { background:#3d3f4d; }
+    body.light .autocomplete-list { background:#f5f5f5; color:#111; }
+    @media (max-width:520px) {
+      .calculator { padding:16px; }
+      .row { gap:8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="toggle-container">
+      <div id="themeToggle" class="toggle-switch" title="Toggle theme">
+        <span>☀</span><span>🌙</span>
+        <div class="toggle-circle"></div>
+      </div>
+    </div>
+
+    <h2>Pro Position Size Calculator</h2>
+
+    <label>Account Balance (USD)</label>
+    <input id="balance" type="number" placeholder="10000" step="any" />
+
+    <label>Search Instrument</label>
+    <input id="instrumentSearch" type="text" placeholder="e.g. EURUSD, GBPJPY, XAUUSD, GER40" autocomplete="off" />
+    <!-- Autocomplete container is positioned relative to calculator -->
+    <div id="autocomplete" class="autocomplete-list"></div>
+
+    <div class="row" style="margin-top:10px;">
+      <label for="riskMode">Risk Mode</label>
+      <select id="riskMode">
+        <option value="percent">Risk %</option>
+        <option value="fixed">Fixed $</option>
+      </select>
+      <label for="risk">Value</label>
+      <input id="risk" type="number" placeholder="1" step="any"/>
+    </div>
+
+    <label>Stop Loss (pips / points)</label>
+    <input id="sl" type="number" placeholder="50" step="any" />
+
+    <button id="calcBtn">Calculate</button>
+
+    <div class="result" id="result"></div>
+    <div class="note" id="note"></div>
+  </div>
+
+  <script>
+  // ---------- CONFIG ----------
+  const ACCOUNT_CURRENCY = "USD";         // account currency for conversion
+  const RATE_TTL_MS = 10 * 60 * 1000;     // cache TTL for FX rates (10 minutes)
+
+  // Supported instruments (you can extend)
+  const instruments = [
+    // Forex majors / minors (6-letter pairs)
+    "EURUSD","GBPUSD","USDJPY","AUDUSD","NZDUSD","USDCAD","USDCHF",
+    "EURJPY","EURGBP","EURAUD","EURNZD","EURCAD","EURCHF",
+    "AUDJPY","AUDNZD","AUDCAD","AUDCHF",
+    "NZDJPY","NZDCAD","NZDCHF",
+    "CADJPY","CADCHF","CHFJPY",
+    "GBPAUD","GBPNZD","GBPCAD","GBPCHF","GBPJPY",
+
+    // Metals
+    "XAUUSD","XAGUSD",
+
+    // Indices (quote currency mapped in code)
+    "US30","NAS100","SPX500","GER40","UK100","FRA40","JP225",
+
+    // Crypto (quote USD)
+    "BTCUSD","ETHUSD","XRPUSD","LTCUSD","BCHUSD"
+  ];
+
+  // ---------- FX RATE CACHE ----------
+  const rateCache = {}; // key "FROM_TO" => { rate, ts }
+
+  async function getConversionRate(from, to = ACCOUNT_CURRENCY) {
+    // same currency
+    if (!from || from === to) return 1;
+
+    const key = `${from}_${to}`;
+    const now = Date.now();
+
+    if (rateCache[key] && (now - rateCache[key].ts) < RATE_TTL_MS) {
+      return rateCache[key].rate;
+    }
+
+    try {
+      const resp = await fetch(`https://api.exchangerate.host/latest?base=${encodeURIComponent(from)}&symbols=${encodeURIComponent(to)}`);
+      const json = await resp.json();
+      if (!json || !json.rates || !json.rates[to]) {
+        console.warn("FX API returned unexpected data", json);
+        return 1; // fallback
+      }
+      const rate = json.rates[to];
+      rateCache[key] = { rate, ts: now };
+      return rate;
+    } catch (err) {
+      console.error("Failed to fetch FX rate", err);
+      return 1; // fallback
+    }
+  }
+
+  // ---------- Instrument property detection ----------
+  function getInstrumentProps(symbol) {
+    symbol = symbol.toUpperCase().trim();
+
+    // Forex 6-letter pairs (e.g., EURUSD, GBPJPY)
+    if (/^[A-Z]{6}$/.test(symbol)) {
+      const base = symbol.slice(0,3);
+      const quote = symbol.slice(3,6);
+      const pipSize = quote === "JPY" ? 0.01 : 0.0001;
+      const contractSize = 100000; // standard lot = 100,000 units of base
+      return { type: "forex", base, quote, pipSize, contractSize };
+    }
+
+    // Metals
+    if (symbol === "XAUUSD") return { type:"metal", pipSize:0.1, contractSize:100, quote:"USD" };
+    if (symbol === "XAGUSD") return { type:"metal", pipSize:0.01, contractSize:5000, quote:"USD" };
+
+    // Indices — map quote currency for conversion
+    const indexMap = {
+      "US30": "USD", "NAS100":"USD","SPX500":"USD",
+      "GER40":"EUR","FRA40":"EUR","UK100":"GBP","JP225":"JPY"
+    };
+    if (indexMap[symbol]) {
+      return { type:"index", pipSize:1, contractSize:1, quote:indexMap[symbol] };
+    }
+
+    // Crypto (quote USD)
+    if (/^(BTC|ETH|XRP|LTC|BCH)USD$/.test(symbol)) {
+      return { type:"crypto", pipSize:1, contractSize:1, quote:"USD" };
+    }
+
+    // Unknown
+    return null;
+  }
+
+  // ---------- Pip value calculation (corrected) ----------
+  // pipValue returned in ACCOUNT_CURRENCY (e.g., USD)
+  async function calculatePipValueInAccountCurrency(symbol) {
+    const props = getInstrumentProps(symbol);
+    if (!props) return { error: "Instrument not recognized" };
+
+    // pip value in quote currency = pipSize * contractSize
+    const pipValueQuote = props.pipSize * props.contractSize;
+
+    // convert to account currency if needed
+    const quote = props.quote || (props.quote === undefined ? "USD" : props.quote);
+    if (quote === ACCOUNT_CURRENCY) {
+      return { pipValueAccount: pipValueQuote, quote };
+    }
+
+    // get conversion rate quote -> account
+    const rate = await getConversionRate(quote, ACCOUNT_CURRENCY);
+    const pipValueAccount = pipValueQuote * rate;
+    return { pipValueAccount, quote, rate };
+  }
+
+  // ---------- UI: autocomplete ----------
+  const searchInput = document.getElementById("instrumentSearch");
+  const autoBox = document.getElementById("autocomplete");
+  const calcBtn = document.getElementById("calcBtn");
+  const resultDiv = document.getElementById("result");
+  const noteDiv = document.getElementById("note");
+
+  function showAutocomplete(matches) {
+    autoBox.innerHTML = "";
+    if (!matches.length) { autoBox.style.display = "none"; return; }
+    matches.forEach(m => {
+      const d = document.createElement("div");
+      d.className = "autocomplete-item";
+      d.innerText = m;
+      d.onclick = () => {
+        searchInput.value = m;
+        autoBox.style.display = "none";
+      };
+      autoBox.appendChild(d);
+    });
+    // position and show
+    autoBox.style.display = "block";
+  }
+
+  searchInput.addEventListener("input", () => {
+    const q = searchInput.value.toUpperCase().trim();
+    if (!q) { autoBox.style.display = "none"; return; }
+    const matches = instruments.filter(i => i.includes(q));
+    showAutocomplete(matches);
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!autoBox.contains(e.target) && e.target !== searchInput) autoBox.style.display = "none";
+  });
+
+  // ---------- Main calculation ----------
+  calcBtn.addEventListener("click", async () => {
+    resultDiv.innerText = "";
+    noteDiv.innerText = "";
+    calcBtn.disabled = true;
+    calcBtn.innerText = "Calculating…";
+
+    try {
+      const balance = parseFloat(document.getElementById("balance").value);
+      const instrument = (document.getElementById("instrumentSearch").value || "").toUpperCase().trim();
+      const riskMode = document.getElementById("riskMode").value;
+      const riskVal = parseFloat(document.getElementById("risk").value);
+      const sl = parseFloat(document.getElementById("sl").value);
+
+      if (isNaN(balance) || !instrument || isNaN(riskVal) || isNaN(sl)) {
+        resultDiv.innerText = "⚠ Please fill all fields with valid numbers.";
+        return;
+      }
+      if (!instruments.includes(instrument)) {
+        resultDiv.innerText = "⚠ Instrument not supported (add it to the list).";
+        return;
+      }
+
+      const props = getInstrumentProps(instrument);
+      if (!props) {
+        resultDiv.innerText = "⚠ Could not detect instrument properties.";
+        return;
+      }
+
+      // get pip value in account currency
+      const pipInfo = await calculatePipValueInAccountCurrency(instrument);
+      if (pipInfo.error) {
+        resultDiv.innerText = "⚠ " + pipInfo.error;
+        return;
+      }
+      const pipValueAcc = pipInfo.pipValueAccount;
+
+      // risk in account currency
+      const riskAmount = (riskMode === "percent") ? (balance * riskVal / 100) : riskVal;
+
+      // lot size
+      let lotSize = riskAmount / (sl * pipValueAcc);
+
+      // rounding: many brokers allow 0.01 lot step; adjust as needed
+      const step = 0.01;
+      lotSize = Math.floor(lotSize / step) * step;
+
+      // display
+      const quote = pipInfo.quote || props.quote || "USD";
+      let note = `Pip size: ${props.pipSize} · Contract size: ${props.contractSize} · Pip value: ${pipValueAcc.toFixed(4)} ${ACCOUNT_CURRENCY} (quote=${quote})`;
+      if (pipInfo.rate && quote !== ACCOUNT_CURRENCY) note += ` · FX ${quote}->${ACCOUNT_CURRENCY}=${pipInfo.rate.toFixed(6)}`;
+
+      resultDiv.innerText = `${instrument} → Lot Size: ${lotSize.toFixed(2)} lots`;
+      noteDiv.innerText = note;
+    } finally {
+      calcBtn.disabled = false;
+      calcBtn.innerText = "Calculate";
+    }
+  });
+
+  // theme toggle
+  const themeToggle = document.getElementById("themeToggle");
+  themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("light");
+    themeToggle.classList.toggle("active");
+  });
+  </script>
+</body>
+</html>
