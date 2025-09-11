@@ -43,7 +43,7 @@
       padding: 20px;
       border-radius: 20px;
       width: 100%;
-      max-width: 460px;
+      max-width: 480px;
       box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
       position: relative;
     }
@@ -76,7 +76,7 @@
       display: flex;
       gap: 10px;
     }
-    .row input {
+    .row .col {
       flex: 1;
     }
 
@@ -177,27 +177,32 @@
     <input type="number" id="balance" placeholder="10000">
 
     <label>Select Instrument</label>
-    <input list="instruments" id="instrumentSearch" placeholder="Choose or type...">
-    <datalist id="instruments">
-      <option value="EURUSD">
-      <option value="GBPUSD">
-      <option value="USDJPY">
-      <option value="GBPJPY">
-      <option value="XAUUSD">
-      <option value="XAGUSD">
-      <option value="US30">
-      <option value="NAS100">
-      <option value="SPX500">
-      <option value="GER40">
-      <option value="BTCUSD">
-      <option value="ETHUSD">
-    </datalist>
+    <select id="instrumentSelect">
+      <option value="">-- Choose Instrument --</option>
+      <option value="EURUSD">EURUSD</option>
+      <option value="GBPUSD">GBPUSD</option>
+      <option value="USDJPY">USDJPY</option>
+      <option value="GBPJPY">GBPJPY</option>
+      <option value="XAUUSD">XAUUSD</option>
+      <option value="XAGUSD">XAGUSD</option>
+      <option value="US30">US30</option>
+      <option value="NAS100">NAS100</option>
+      <option value="SPX500">SPX500</option>
+      <option value="GER40">GER40</option>
+      <option value="BTCUSD">BTCUSD</option>
+      <option value="ETHUSD">ETHUSD</option>
+    </select>
 
-    <label>Contract Size</label>
-    <input type="number" id="contractSize" placeholder="Default from instrument">
-
-    <label>Leverage (optional)</label>
-    <input type="number" id="leverage" placeholder="e.g. 100">
+    <div class="row">
+      <div class="col">
+        <label>Contract Size</label>
+        <input type="number" id="contractSize" placeholder="Default from instrument">
+      </div>
+      <div class="col">
+        <label>Leverage (optional)</label>
+        <input type="number" id="leverage" placeholder="e.g. 100">
+      </div>
+    </div>
 
     <label>Risk Mode + Value</label>
     <div class="risk-row">
@@ -244,8 +249,8 @@
       localStorage.setItem("contractOverrides", JSON.stringify(overrides));
     }
 
-    document.getElementById("instrumentSearch").addEventListener("input", function() {
-      let inst = this.value.toUpperCase().trim();
+    document.getElementById("instrumentSelect").addEventListener("change", function() {
+      let inst = this.value;
       if (!inst) return;
       let saved = loadOverride(inst);
       if (saved) {
@@ -257,7 +262,7 @@
 
     function calculate() {
       let balance = parseFloat(document.getElementById('balance').value);
-      let instrument = document.getElementById('instrumentSearch').value.toUpperCase().trim();
+      let instrument = document.getElementById('instrumentSelect').value;
       let contractSize = parseFloat(document.getElementById('contractSize').value);
       let leverage = parseFloat(document.getElementById('leverage').value);
       let riskMode = document.getElementById('riskMode').value;
