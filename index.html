@@ -1,298 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pro Position Size Calculator — Fixed FX</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pro Position Size Calculator</title>
   <style>
-    body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(#343540,#242831);color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:16px;box-sizing:border-box}
-    body.light{background:linear-gradient(#f0f0f0,#d9d9d9);color:#111}
-    .calculator{width:100%;max-width:560px;background:#15181d;padding:20px;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.5);position:relative}
-    .calculator h2{text-align:center;margin:0 0 12px}
-    label{display:block;margin-top:12px;font-size:0.95rem}
-    input,select,button{width:100%;padding:10px;margin-top:6px;border-radius:8px;border:0;background:#242831;color:#fff;box-sizing:border-box;font-size:1rem}
-    button{cursor:pointer;background:#343540}
-    .row{display:flex;gap:10px;align-items:center;margin-top:12px}
-    .row label{flex:1;margin:0;font-size:0.9rem}
-    .row input,.row select{flex:1}
-    .autocomplete{position:absolute;background:#242831;border-radius:6px;max-height:200px;overflow:auto;width:calc(100% - 40px);z-index:30;display:none}
-    .autocomplete div{padding:8px;cursor:pointer}
-    .autocomplete div:hover{background:#3d3f4d}
-    .note{font-size:0.9rem;opacity:0.85;margin-top:8px;text-align:center}
-    .result{font-weight:700;margin-top:14px;text-align:center;font-size:1.05rem}
-    .toggle{position:absolute;right:14px;top:14px;width:50px;height:26px;border-radius:20px;background:#555;display:flex;align-items:center;justify-content:space-between;padding:0 6px;cursor:pointer}
-    .toggle .circle{position:absolute;left:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:left .22s}
-    .toggle.active{background:#4caf50}.toggle.active .circle{left:27px}
-    body.light input,body.light select{background:#f5f5f5;color:#111}
-    body.light .autocomplete{background:#f5f5f5;color:#111}
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(#343540, #242831);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 15px;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.light {
+      background: linear-gradient(#f0f0f0, #d9d9d9);
+      color: black;
+    }
+    body.light .calculator {
+      background: #ffffff;
+      color: black;
+    }
+    body.light input,
+    body.light select {
+      background: #f5f5f5;
+      color: black;
+    }
+    body.light button {
+      background: #e0e0e0;
+      color: black;
+    }
+    body.light button:hover {
+      background: #d1d1d1;
+    }
+
+    .calculator {
+      background: #15181d;
+      padding: 20px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
+      position: relative;
+    }
+
+    .calculator h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    .calculator label {
+      display: block;
+      margin-top: 12px;
+      font-size: 0.9rem;
+    }
+
+    .calculator input, .calculator select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: none;
+      border-radius: 8px;
+      background: #242831;
+      color: white;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    .risk-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .risk-row select { flex: 1; }
+    .risk-row input { flex: 1; }
+
+    .calculator button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #343540;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .calculator button:hover {
+      background: #3d3f4d;
+    }
+
+    .result {
+      margin-top: 18px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 480px) {
+      .calculator {
+        padding: 15px;
+        border-radius: 15px;
+      }
+      .calculator h2 {
+        font-size: 1.3rem;
+      }
+      .calculator input {
+        font-size: 0.95rem;
+        padding: 9px;
+      }
+      .calculator button {
+        font-size: 0.95rem;
+      }
+    }
+
+    /* 🌙 Toggle Switch */
+    .toggle-container {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 24px;
+      background: #555;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5px;
+      font-size: 12px;
+      color: white;
+      box-sizing: border-box;
+    }
+    .toggle-switch span {
+      pointer-events: none;
+    }
+    .toggle-circle {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: left 0.3s;
+    }
+    .toggle-switch.active {
+      background: #4caf50;
+    }
+    .toggle-switch.active .toggle-circle {
+      left: 28px;
+    }
+    body.light .toggle-switch {
+      color: black;
+    }
   </style>
 </head>
 <body>
   <div class="calculator">
-    <div class="toggle" id="themeToggle" title="Toggle theme">
-      <span>☀</span><span>🌙</span><div class="circle"></div>
+    <!-- 🌙 Toggle Switch -->
+    <div class="toggle-container">
+      <div id="themeToggle" class="toggle-switch">
+        <span>☀</span>
+        <span>🌙</span>
+        <div class="toggle-circle"></div>
+      </div>
     </div>
 
     <h2>Pro Position Size Calculator</h2>
 
     <label>Account Balance (USD)</label>
-    <input id="balance" type="number" step="any" placeholder="10000" />
+    <input type="number" id="balance" placeholder="10000">
 
     <label>Search Instrument</label>
-    <input id="instrumentSearch" type="text" placeholder="e.g. EURUSD, GBPJPY, XAUUSD, GER40" autocomplete="off" />
-    <div id="autocomplete" class="autocomplete"></div>
+    <input type="text" id="instrumentSearch" placeholder="e.g. EURUSD, XAUUSD, BTCUSD">
 
-    <!-- editable pip / contract -->
-    <div class="row">
-      <label for="pipSize">Pip Size</label>
-      <input id="pipSize" type="number" step="any" placeholder="auto" />
-      <label for="contractSize">Contract Size</label>
-      <input id="contractSize" type="number" step="any" placeholder="auto" />
-    </div>
+    <label>Contract Size</label>
+    <input type="number" id="contractSize" placeholder="Default from instrument">
 
-    <div class="row" style="margin-top:10px">
-      <label for="riskMode">Risk Mode</label>
-      <select id="riskMode"><option value="percent">Risk %</option><option value="fixed">Fixed $</option></select>
-      <label for="risk">Value</label>
-      <input id="risk" type="number" step="any" placeholder="1" />
+    <label>Risk Mode + Value</label>
+    <div class="risk-row">
+      <select id="riskMode">
+        <option value="percent">Risk %</option>
+        <option value="fixed">Fixed $</option>
+      </select>
+      <input type="number" id="risk" placeholder="1">
     </div>
 
     <label>Stop Loss (pips / points)</label>
-    <input id="sl" type="number" step="any" placeholder="50" />
+    <input type="number" id="sl" placeholder="50">
 
-    <button id="calcBtn">Calculate</button>
+    <button onclick="calculate()">Calculate</button>
 
     <div class="result" id="result"></div>
-    <div class="note" id="note"></div>
   </div>
 
-<script>
-/* ---------- CONFIG ---------- */
-const ACCOUNT_CURRENCY = "USD";
-const RATE_TTL_MS = 10 * 60 * 1000; // 10 minutes cache
-const instruments = [
-  // Forex (common)
-  "EURUSD","GBPUSD","USDJPY","AUDUSD","NZDUSD","USDCAD","USDCHF",
-  "EURJPY","EURGBP","EURAUD","EURNZD","EURCAD","EURCHF",
-  "AUDJPY","AUDNZD","AUDCAD","AUDCHF",
-  "NZDJPY","NZDCAD","NZDCHF",
-  "CADJPY","CADCHF","CHFJPY",
-  "GBPAUD","GBPNZD","GBPCAD","GBPCHF","GBPJPY",
-  // Metals
-  "XAUUSD","XAGUSD",
-  // Indices
-  "US30","NAS100","SPX500","GER40","UK100","FRA40","JP225",
-  // Crypto
-  "BTCUSD","ETHUSD","XRPUSD","LTCUSD","BCHUSD"
-];
+  <script>
+    // Default contract sizes & pip sizes
+    const defaults = {
+      "EURUSD": {contract: 100000, pip: 0.0001},
+      "GBPUSD": {contract: 100000, pip: 0.0001},
+      "USDJPY": {contract: 100000, pip: 0.01},
+      "GBPJPY": {contract: 100000, pip: 0.01},
+      "XAUUSD": {contract: 100, pip: 0.1},
+      "XAGUSD": {contract: 5000, pip: 0.01},
+      "US30": {contract: 1, pip: 1},
+      "NAS100": {contract: 1, pip: 1},
+      "SPX500": {contract: 1, pip: 0.1},
+      "GER40": {contract: 1, pip: 1},
+      "BTCUSD": {contract: 1, pip: 1},
+      "ETHUSD": {contract: 1, pip: 1}
+    };
 
-const rateCache = {}; // { "FROM_TO": {rate, ts} }
-
-/* ---------- Robust FX fetch ----------
-   1) try base=FROM symbols=TO
-   2) if no result, try base=TO symbols=FROM and invert
-*/
-async function getConversionRate(from, to = ACCOUNT_CURRENCY) {
-  if (!from || from === to) return 1;
-  const key = `${from}_${to}`;
-  const now = Date.now();
-  if (rateCache[key] && (now - rateCache[key].ts) < RATE_TTL_MS) return rateCache[key].rate;
-
-  // Helper to query exchangerate.host latest
-  async function fetchRate(base, symbol) {
-    const url = `https://api.exchangerate.host/latest?base=${encodeURIComponent(base)}&symbols=${encodeURIComponent(symbol)}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const j = await res.json();
-    return j;
-  }
-
-  try {
-    // primary attempt: from -> to
-    const j = await fetchRate(from, to);
-    if (j && j.rates && typeof j.rates[to] === "number" && j.rates[to] > 0) {
-      rateCache[key] = { rate: j.rates[to], ts: now };
-      return j.rates[to];
+    // Load saved contract size from localStorage
+    function loadOverride(instrument) {
+      let overrides = JSON.parse(localStorage.getItem("contractOverrides") || "{}");
+      return overrides[instrument] || null;
     }
 
-    // try reverse: to -> from and invert
-    const j2 = await fetchRate(to, from);
-    if (j2 && j2.rates && typeof j2.rates[from] === "number" && j2.rates[from] > 0) {
-      const inverted = 1 / j2.rates[from];
-      rateCache[key] = { rate: inverted, ts: now };
-      return inverted;
+    function saveOverride(instrument, contractSize) {
+      let overrides = JSON.parse(localStorage.getItem("contractOverrides") || "{}");
+      overrides[instrument] = contractSize;
+      localStorage.setItem("contractOverrides", JSON.stringify(overrides));
     }
 
-    // no usable rate
-    console.warn("FX: no usable rate for", from, "->", to, "responses:", j, j2);
-    return null;
-  } catch (err) {
-    console.warn("FX fetch failed, trying reverse/invert fallback...", err);
-    // try reverse as a last attempt
-    try {
-      const j2 = await fetchRate(to, from);
-      if (j2 && j2.rates && typeof j2.rates[from] === "number" && j2.rates[from] > 0) {
-        const inverted = 1 / j2.rates[from];
-        rateCache[`${from}_${to}`] = { rate: inverted, ts: now };
-        return inverted;
+    document.getElementById("instrumentSearch").addEventListener("input", function() {
+      let inst = this.value.toUpperCase().trim();
+      if (!inst) return;
+      let saved = loadOverride(inst);
+      if (saved) {
+        document.getElementById("contractSize").value = saved;
+      } else if (defaults[inst]) {
+        document.getElementById("contractSize").value = defaults[inst].contract;
       }
-    } catch (err2) {
-      console.error("Reverse fetch also failed", err2);
-    }
-    return null;
-  }
-}
-
-/* ---------- Instrument helpers ---------- */
-function getInstrumentProps(symbol) {
-  symbol = (symbol || "").toUpperCase().trim();
-  if (!symbol) return null;
-
-  // 6-letter forex pairs (e.g., GBPJPY)
-  if (/^[A-Z]{6}$/.test(symbol)) {
-    const base = symbol.slice(0,3);
-    const quote = symbol.slice(3,6);
-    const pipSize = (quote === "JPY") ? 0.01 : 0.0001;
-    const contractSize = 100000; // standard lot units of base
-    return { type: "forex", base, quote, pipSize, contractSize };
-  }
-
-  // Metals
-  if (symbol === "XAUUSD") return { type:"metal", pipSize:0.1, contractSize:100, quote:"USD" };
-  if (symbol === "XAGUSD") return { type:"metal", pipSize:0.01, contractSize:5000, quote:"USD" };
-
-  // Indices (quote currency depends on index)
-  const indexMap = { "US30":"USD","NAS100":"USD","SPX500":"USD","GER40":"EUR","FRA40":"EUR","UK100":"GBP","JP225":"JPY" };
-  if (indexMap[symbol]) return { type:"index", pipSize:1, contractSize:1, quote:indexMap[symbol] };
-
-  // Crypto quoted in USD
-  if (/^(BTC|ETH|XRP|LTC|BCH)USD$/.test(symbol)) return { type:"crypto", pipSize:1, contractSize:1, quote:"USD" };
-
-  return null;
-}
-
-/* ---------- Pip value calc ----------
-   pip value in ACCOUNT_CURRENCY
-*/
-async function calculatePipValueInAccountCurrency(symbol, pipSize, contractSize) {
-  const props = getInstrumentProps(symbol);
-  if (!props) return { error: "Unrecognized instrument" };
-
-  // use provided overrides if given, otherwise defaults
-  const usedPip = (pipSize != null && !isNaN(pipSize)) ? Number(pipSize) : props.pipSize;
-  const usedContract = (contractSize != null && !isNaN(contractSize)) ? Number(contractSize) : props.contractSize;
-
-  // pip value in quote currency:
-  // = pipSize * contractSize
-  const pipValueQuote = usedPip * usedContract;
-
-  const quote = props.quote || "USD";
-  if (quote === ACCOUNT_CURRENCY) {
-    return { pipValueAcc: pipValueQuote, quote, rate: 1, usedPip, usedContract };
-  }
-
-  // convert quote -> account
-  const rate = await getConversionRate(quote, ACCOUNT_CURRENCY);
-  if (rate == null) {
-    return { error: `FX rate ${quote}->${ACCOUNT_CURRENCY} unavailable`, quote, usedPip, usedContract };
-  }
-  const pipValueAcc = pipValueQuote * rate;
-  return { pipValueAcc, quote, rate, usedPip, usedContract };
-}
-
-/* ---------- UI wiring ---------- */
-const searchInput = document.getElementById("instrumentSearch");
-const autoBox = document.getElementById("autocomplete");
-const pipInput = document.getElementById("pipSize");
-const contractInput = document.getElementById("contractSize");
-const calcBtn = document.getElementById("calcBtn");
-const resultDiv = document.getElementById("result");
-const noteDiv = document.getElementById("note");
-const themeToggle = document.getElementById("themeToggle");
-
-// autocomplete
-searchInput.addEventListener("input", () => {
-  const q = (searchInput.value || "").toUpperCase().trim();
-  if (!q) { autoBox.style.display = "none"; return; }
-  const matches = instruments.filter(i => i.includes(q));
-  autoBox.innerHTML = matches.map(m => `<div class="item">${m}</div>`).join("");
-  Array.from(autoBox.children).forEach(child => {
-    child.addEventListener("click", () => {
-      const val = child.textContent;
-      searchInput.value = val;
-      autoBox.style.display = "none";
-      fillDefaults(val);
     });
-  });
-  autoBox.style.display = matches.length ? "block" : "none";
-});
-document.addEventListener("click", (e) => { if (!autoBox.contains(e.target) && e.target !== searchInput) autoBox.style.display = "none"; });
 
-// fill pip & contract default when instrument selected
-function fillDefaults(symbol) {
-  const props = getInstrumentProps(symbol);
-  if (!props) return;
-  pipInput.value = props.pipSize;
-  contractInput.value = props.contractSize;
-  noteDiv.innerText = `Defaults loaded for ${symbol}: pip=${props.pipSize}, contract=${props.contractSize}`;
-}
+    function calculate() {
+      let balance = parseFloat(document.getElementById('balance').value);
+      let instrument = document.getElementById('instrumentSearch').value.toUpperCase().trim();
+      let contractSize = parseFloat(document.getElementById('contractSize').value);
+      let riskMode = document.getElementById('riskMode').value;
+      let risk = parseFloat(document.getElementById('risk').value);
+      let sl = parseFloat(document.getElementById('sl').value);
 
-// calculate handler
-calcBtn.addEventListener("click", async () => {
-  resultDiv.innerText = ""; noteDiv.innerText = "";
-  calcBtn.disabled = true; calcBtn.textContent = "Calculating…";
+      if(isNaN(balance) || isNaN(risk) || isNaN(sl) || !instrument){
+        document.getElementById('result').innerText = "⚠ Please enter all fields!";
+        return;
+      }
 
-  try {
-    const balance = parseFloat(document.getElementById("balance").value);
-    const instrument = (searchInput.value || "").toUpperCase().trim();
-    const riskMode = document.getElementById("riskMode").value;
-    const riskVal = parseFloat(document.getElementById("risk").value);
-    const sl = parseFloat(document.getElementById("sl").value);
-    const pipOverride = parseFloat(pipInput.value);
-    const contractOverride = parseFloat(contractInput.value);
+      // Load defaults if missing
+      let pipSize = defaults[instrument]?.pip || 0.0001;
+      if (!contractSize && defaults[instrument]) contractSize = defaults[instrument].contract;
 
-    if (isNaN(balance) || !instrument || isNaN(riskVal) || isNaN(sl)) {
-      resultDiv.innerText = "⚠ Please fill Account, Instrument, Risk and SL with valid numbers.";
-      return;
-    }
-    if (!instruments.includes(instrument)) {
-      resultDiv.innerText = "⚠ Instrument not in supported list.";
-      return;
-    }
+      if (!contractSize || !pipSize) {
+        document.getElementById('result').innerText = "⚠ Unknown instrument!";
+        return;
+      }
 
-    const props = getInstrumentProps(instrument);
-    if (!props) { resultDiv.innerText = "⚠ Unknown instrument properties."; return; }
+      // Save override
+      saveOverride(instrument, contractSize);
 
-    const pipInfo = await calculatePipValueInAccountCurrency(instrument, pipOverride, contractOverride);
-    if (pipInfo.error) {
-      resultDiv.innerText = `⚠ ${pipInfo.error}.`;
-      noteDiv.innerText = "If your environment blocks FX API, enter pip value manually or a manual FX rate.";
-      return;
+      // Pip value calculation (USD-denominated)
+      let pipValue = (pipSize * contractSize);
+
+      // Risk amount
+      let riskAmount = (riskMode === "percent") ? (balance * risk / 100) : risk;
+
+      // Lot size
+      let lotSize = riskAmount / (sl * pipValue);
+
+      document.getElementById('result').innerText =
+        `${instrument} → Lot Size: ${lotSize.toFixed(2)} lots\n` +
+        `Contract size: ${contractSize} · Pip size: ${pipSize} · Pip value: ${pipValue.toFixed(4)} USD`;
     }
 
-    const pipValue = pipInfo.pipValueAcc;
-    const usedPip = pipInfo.usedPip;
-    const usedContract = pipInfo.usedContract;
-    const riskAmount = (riskMode === "percent") ? (balance * riskVal / 100) : riskVal;
-
-    let rawLot = riskAmount / (sl * pipValue);
-    // lot step rounding (broker dependent) — floor to 0.01
-    const step = 0.01;
-    const lot = Math.max(Math.floor(rawLot / step) * step, 0);
-
-    resultDiv.innerText = `${instrument} → Lot Size: ${lot.toFixed(2)} lots`;
-    noteDiv.innerText = `Pip size: ${usedPip} · Contract size: ${usedContract} · Pip value: ${pipValue.toFixed(4)} ${ACCOUNT_CURRENCY} (quote=${pipInfo.quote})` +
-                        (pipInfo.rate ? ` · FX ${pipInfo.quote}->${ACCOUNT_CURRENCY}=${pipInfo.rate.toFixed(6)}` : "");
-  } finally {
-    calcBtn.disabled = false; calcBtn.textContent = "Calculate";
-  }
-});
-
-// theme toggle
-themeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("light");
-  themeToggle.classList.toggle("active");
-});
-</script>
+    // 🌙 Theme Toggle
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light");
+      themeToggle.classList.toggle("active");
+    });
+  </script>
 </body>
 </html>
