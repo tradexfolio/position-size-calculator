@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pro Position Size Calculator</title>
+  <title>Pro Trading Calculator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -43,7 +43,7 @@
       padding: 20px;
       border-radius: 20px;
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
       position: relative;
     }
@@ -77,8 +77,6 @@
       gap: 10px;
       align-items: center;
     }
-    .risk-row select { flex: 1; }
-    .risk-row input { flex: 1; }
 
     .calculator button {
       margin-top: 20px;
@@ -99,26 +97,14 @@
 
     .result {
       margin-top: 18px;
-      font-weight: bold;
-      text-align: center;
-      font-size: 1.1rem;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      font-size: 1rem;
     }
 
-    @media (max-width: 480px) {
-      .calculator {
-        padding: 15px;
-        border-radius: 15px;
-      }
-      .calculator h2 {
-        font-size: 1.3rem;
-      }
-      .calculator input {
-        font-size: 0.95rem;
-        padding: 9px;
-      }
-      .calculator button {
-        font-size: 0.95rem;
-      }
+    .result p {
+      margin: 6px 0;
     }
 
     /* 🌙 Toggle Switch */
@@ -177,7 +163,7 @@
       </div>
     </div>
 
-    <h2>Pro Position Size Calculator</h2>
+    <h2>Pro Trading Calculator</h2>
 
     <label>Account Balance (USD)</label>
     <input type="number" id="balance" placeholder="10000">
@@ -187,6 +173,9 @@
 
     <label>Contract Size</label>
     <input type="number" id="contractSize" placeholder="Default from instrument">
+
+    <label>Leverage</label>
+    <input type="number" id="leverage" placeholder="100">
 
     <label>Risk Mode + Value</label>
     <div class="risk-row">
@@ -200,7 +189,7 @@
     <label>Stop Loss (pips / points)</label>
     <input type="number" id="sl" placeholder="50">
 
-    <button onclick="calculate()">Calculate</button>
+    <button id="calcBtn">Calculate</button>
 
     <div class="result" id="result"></div>
   </div>
@@ -249,12 +238,13 @@
       let balance = parseFloat(document.getElementById('balance').value);
       let instrument = document.getElementById('instrumentSearch').value.toUpperCase().trim();
       let contractSize = parseFloat(document.getElementById('contractSize').value);
+      let leverage = parseFloat(document.getElementById('leverage').value);
       let riskMode = document.getElementById('riskMode').value;
       let risk = parseFloat(document.getElementById('risk').value);
       let sl = parseFloat(document.getElementById('sl').value);
 
-      if(isNaN(balance) || isNaN(risk) || isNaN(sl) || !instrument){
-        document.getElementById('result').innerText = "⚠ Please enter all fields!";
+      if(isNaN(balance) || isNaN(risk) || isNaN(sl) || isNaN(leverage) || !instrument){
+        document.getElementById('result').innerHTML = "<p>⚠ Please enter all fields!</p>";
         return;
       }
 
@@ -263,14 +253,14 @@
       if (!contractSize && defaults[instrument]) contractSize = defaults[instrument].contract;
 
       if (!contractSize || !pipSize) {
-        document.getElementById('result').innerText = "⚠ Unknown instrument!";
+        document.getElementById('result').innerHTML = "<p>⚠ Unknown instrument!</p>";
         return;
       }
 
       // Save override
       saveOverride(instrument, contractSize);
 
-      // Pip value calculation (USD-denominated)
+      // Pip value calculation
       let pipValue = (pipSize * contractSize);
 
       // Risk amount
@@ -279,16 +269,39 @@
       // Lot size
       let lotSize = riskAmount / (sl * pipValue);
 
-      document.getElementById('result').innerText =
-        `${instrument} → Lot Size: ${lotSize.toFixed(2)} lots\n` +
-        `Contract size: ${contractSize} · Pip size: ${pipSize} · Pip value: ${pipValue.toFixed(4)} USD`;
+      // Margin requirement
+      let margin = (contractSize * lotSize) / leverage;
+
+      // Output
+      document.getElementById('result').innerHTML = `
+        <p><b>${instrument}</b></p>
+        <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
+        <p>Pip Value: ${pipValue.toFixed(4)} USD per lot</p>
+        <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
+        <p>Margin Required: ${margin.toFixed(2)} USD</p>
+      `;
     }
 
-    // 🌙 Theme Toggle
+    // Attach event
+    document.getElementById("calcBtn").addEventListener("click", calculate);
+
+    // 🌙 Theme Toggle + Save
     const themeToggle = document.getElementById("themeToggle");
+    function applyTheme(light) {
+      if (light) {
+        document.body.classList.add("light");
+        themeToggle.classList.add("active");
+      } else {
+        document.body.classList.remove("light");
+        themeToggle.classList.remove("active");
+      }
+    }
+    // Load theme
+    applyTheme(localStorage.getItem("theme") === "light");
     themeToggle.addEventListener("click", () => {
-      document.body.classList.toggle("light");
+      let isLight = document.body.classList.toggle("light");
       themeToggle.classList.toggle("active");
+      localStorage.setItem("theme", isLight ? "light" : "dark");
     });
   </script>
 </body>
