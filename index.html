@@ -43,7 +43,7 @@
       padding: 20px;
       border-radius: 20px;
       width: 100%;
-      max-width: 440px;
+      max-width: 460px;
       box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
       position: relative;
     }
@@ -70,6 +70,14 @@
       color: white;
       font-size: 1rem;
       box-sizing: border-box;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+    .row input {
+      flex: 1;
     }
 
     .risk-row {
@@ -171,11 +179,11 @@
     <label>Search Instrument</label>
     <input type="text" id="instrumentSearch" placeholder="e.g. EURUSD, XAUUSD, BTCUSD">
 
-    <label>Contract Size</label>
-    <input type="number" id="contractSize" placeholder="Default from instrument">
-
-    <label>Leverage</label>
-    <input type="number" id="leverage" placeholder="100">
+    <label>Contract Size & Leverage</label>
+    <div class="row">
+      <input type="number" id="contractSize" placeholder="Default from instrument">
+      <input type="number" id="leverage" placeholder="Optional">
+    </div>
 
     <label>Risk Mode + Value</label>
     <div class="risk-row">
@@ -238,13 +246,13 @@
       let balance = parseFloat(document.getElementById('balance').value);
       let instrument = document.getElementById('instrumentSearch').value.toUpperCase().trim();
       let contractSize = parseFloat(document.getElementById('contractSize').value);
-      let leverage = parseFloat(document.getElementById('leverage').value);
+      let leverage = parseFloat(document.getElementById('leverage').value); // optional
       let riskMode = document.getElementById('riskMode').value;
       let risk = parseFloat(document.getElementById('risk').value);
       let sl = parseFloat(document.getElementById('sl').value);
 
-      if(isNaN(balance) || isNaN(risk) || isNaN(sl) || isNaN(leverage) || !instrument){
-        document.getElementById('result').innerHTML = "<p>⚠ Please enter all fields!</p>";
+      if(isNaN(balance) || isNaN(risk) || isNaN(sl) || !instrument){
+        document.getElementById('result').innerHTML = "<p>⚠ Please enter all required fields!</p>";
         return;
       }
 
@@ -269,17 +277,23 @@
       // Lot size
       let lotSize = riskAmount / (sl * pipValue);
 
-      // Margin requirement
-      let margin = (contractSize * lotSize) / leverage;
+      // Margin requirement (only if leverage provided)
+      let margin = (!isNaN(leverage) && leverage > 0) 
+        ? (contractSize * lotSize) / leverage 
+        : null;
 
       // Output
-      document.getElementById('result').innerHTML = `
+      let html = `
         <p><b>${instrument}</b></p>
         <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
         <p>Pip Value: ${pipValue.toFixed(4)} USD per lot</p>
         <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
-        <p>Margin Required: ${margin.toFixed(2)} USD</p>
       `;
+      if (margin !== null) {
+        html += `<p>Margin Required: ${margin.toFixed(2)} USD</p>`;
+      }
+
+      document.getElementById('result').innerHTML = html;
     }
 
     // Attach event
