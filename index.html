@@ -5,142 +5,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pro Position Size Calculator</title>
   <style>
-    :root {
-      --bg-gradient: linear-gradient(#343540, #242831);
-      --card-bg: #15181d;
-      --input-bg: #242831;
-      --text-color: white;
-      --btn-bg: #343540;
-      --btn-hover: #3d3f4d;
-    }
-
-    body.light {
-      --bg-gradient: linear-gradient(#f5f6fa, #dcdde1);
-      --card-bg: #ffffff;
-      --input-bg: #f1f2f6;
-      --text-color: #2f3640;
-      --btn-bg: #40739e;
-      --btn-hover: #487eb0;
-    }
-
     body {
       font-family: Arial, sans-serif;
-      background: var(--bg-gradient);
-      color: var(--text-color);
+      background: linear-gradient(#343540, #242831);
+      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      padding: 20px;
       margin: 0;
-      padding: 15px;
-      transition: background 0.3s, color 0.3s;
     }
-
     .calculator {
-      background: var(--card-bg);
+      background: #15181d;
       padding: 20px;
       border-radius: 20px;
       width: 100%;
       max-width: 400px;
       box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
-      transition: background 0.3s;
-      position: relative;
     }
-
     .calculator h2 {
       text-align: center;
       margin-bottom: 15px;
-      font-size: 1.5rem;
     }
-
     .calculator label {
       display: block;
-      margin-top: 12px;
-      font-size: 0.9rem;
+      margin-top: 10px;
+      font-size: 14px;
     }
-
-    .calculator input,
-    .calculator select {
+    .calculator input, .calculator select {
       width: 100%;
       padding: 10px;
-      margin-top: 6px;
+      margin-top: 5px;
       border: none;
       border-radius: 8px;
-      background: var(--input-bg);
-      color: var(--text-color);
-      font-size: 1rem;
-      box-sizing: border-box;
-      transition: background 0.3s, color 0.3s;
+      background: #242831;
+      color: white;
+      font-size: 14px;
     }
-
     .calculator button {
       margin-top: 20px;
       width: 100%;
       padding: 12px;
       border: none;
       border-radius: 10px;
-      background: var(--btn-bg);
+      background: #343540;
       color: white;
-      font-size: 1rem;
+      font-size: 16px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: 0.2s;
     }
-
     .calculator button:hover {
-      background: var(--btn-hover);
+      background: #3d3f4d;
     }
-
     .result {
-      margin-top: 18px;
+      margin-top: 15px;
       font-weight: bold;
       text-align: center;
-      font-size: 1.1rem;
-    }
-
-    /* 🌙 Toggle Button */
-    .theme-toggle {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: transparent;
-      border: 2px solid var(--btn-bg);
-      color: var(--text-color);
-      border-radius: 50%;
-      width: 35px;
-      height: 35px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.3s, color 0.3s, border 0.3s;
-    }
-
-    .theme-toggle:hover {
-      background: var(--btn-bg);
-      color: white;
-    }
-
-    /* 📱 Mobile tweaks */
-    @media (max-width: 480px) {
-      .calculator {
-        padding: 15px;
-        border-radius: 15px;
-      }
-      .calculator h2 {
-        font-size: 1.3rem;
-      }
-      .calculator input,
-      .calculator select {
-        font-size: 0.95rem;
-        padding: 9px;
-      }
-      .calculator button {
-        font-size: 0.95rem;
-      }
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
   <div class="calculator">
-    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
     <h2>Pro Position Size Calculator</h2>
 
     <label>Account Balance ($)</label>
@@ -158,14 +85,31 @@
     <label>Stop Loss (pips/points)</label>
     <input type="number" id="sl" placeholder="50">
 
-    <label>Select Instrument</label>
+    <label>Select Popular Instrument</label>
     <select id="instrument">
       <option value="EURUSD">EURUSD</option>
+      <option value="GBPUSD">GBPUSD</option>
+      <option value="USDJPY">USDJPY</option>
       <option value="GBPJPY">GBPJPY</option>
+      <option value="AUDUSD">AUDUSD</option>
+      <option value="NZDUSD">NZDUSD</option>
+      <option value="USDCAD">USDCAD</option>
+      <option value="USDCHF">USDCHF</option>
       <option value="XAUUSD">XAUUSD (Gold)</option>
+      <option value="XAGUSD">XAGUSD (Silver)</option>
       <option value="GER40">GER40 (DAX)</option>
       <option value="US30">US30 (Dow Jones)</option>
+      <option value="NAS100">NAS100 (Nasdaq)</option>
+      <option value="SPX500">SPX500 (S&P 500)</option>
+      <option value="BTCUSD">BTCUSD (Bitcoin)</option>
+      <option value="ETHUSD">ETHUSD (Ethereum)</option>
     </select>
+
+    <label>Or Enter Custom Asset</label>
+    <input type="text" id="customInstrument" placeholder="e.g. USDZAR">
+
+    <label>Pip/Point Value ($)</label>
+    <input type="number" id="customPipValue" placeholder="e.g. 10">
 
     <button onclick="calculate()">Calculate</button>
 
@@ -175,10 +119,21 @@
   <script>
     const pipValues = {
       "EURUSD": 10,
+      "GBPUSD": 10,
+      "USDJPY": 9.1,
       "GBPJPY": 9,
+      "AUDUSD": 10,
+      "NZDUSD": 10,
+      "USDCAD": 10,
+      "USDCHF": 10,
       "XAUUSD": 1,
+      "XAGUSD": 0.5,
       "GER40": 1,
-      "US30": 1
+      "US30": 1,
+      "NAS100": 1,
+      "SPX500": 1,
+      "BTCUSD": 1,
+      "ETHUSD": 1
     };
 
     function calculate() {
@@ -186,29 +141,24 @@
       let riskMode = document.getElementById('riskMode').value;
       let risk = parseFloat(document.getElementById('risk').value);
       let sl = parseFloat(document.getElementById('sl').value);
-      let instrument = document.getElementById('instrument').value;
+
+      let selectedInstrument = document.getElementById('instrument').value;
+      let customInstrument = document.getElementById('customInstrument').value.trim().toUpperCase();
+      let customPipValue = parseFloat(document.getElementById('customPipValue').value);
 
       if(isNaN(balance) || isNaN(risk) || isNaN(sl)){
-        document.getElementById('result').innerText = "⚠ Please enter all fields!";
+        document.getElementById('result').innerText = "⚠ Please enter all required fields!";
         return;
       }
 
+      let instrument = customInstrument || selectedInstrument;
+      let pipValue = (!isNaN(customPipValue) && customPipValue > 0) ? customPipValue : (pipValues[instrument] || 10);
+
       let riskAmount = (riskMode === "percent") ? (balance * risk / 100) : risk;
-      let pipValue = pipValues[instrument] || 10;
       let lotSize = riskAmount / (sl * pipValue);
 
       document.getElementById('result').innerText =
-        `Lot Size: ${lotSize.toFixed(2)} lots`;
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle("light");
-      const btn = document.querySelector(".theme-toggle");
-      if (document.body.classList.contains("light")) {
-        btn.innerText = "☀️";
-      } else {
-        btn.innerText = "🌙";
-      }
+        `Instrument: ${instrument} | Lot Size: ${lotSize.toFixed(2)} lots`;
     }
   </script>
 </body>
