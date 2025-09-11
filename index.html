@@ -176,14 +176,28 @@
     <label>Account Balance (USD)</label>
     <input type="number" id="balance" placeholder="10000">
 
-    <label>Search Instrument</label>
-    <input type="text" id="instrumentSearch" placeholder="e.g. EURUSD, XAUUSD, BTCUSD">
+    <label>Select Instrument</label>
+    <input list="instruments" id="instrumentSearch" placeholder="Choose or type...">
+    <datalist id="instruments">
+      <option value="EURUSD">
+      <option value="GBPUSD">
+      <option value="USDJPY">
+      <option value="GBPJPY">
+      <option value="XAUUSD">
+      <option value="XAGUSD">
+      <option value="US30">
+      <option value="NAS100">
+      <option value="SPX500">
+      <option value="GER40">
+      <option value="BTCUSD">
+      <option value="ETHUSD">
+    </datalist>
 
-    <label>Contract Size & Leverage</label>
-    <div class="row">
-      <input type="number" id="contractSize" placeholder="Default from instrument">
-      <input type="number" id="leverage" placeholder="Optional">
-    </div>
+    <label>Contract Size</label>
+    <input type="number" id="contractSize" placeholder="Default from instrument">
+
+    <label>Leverage (optional)</label>
+    <input type="number" id="leverage" placeholder="e.g. 100">
 
     <label>Risk Mode + Value</label>
     <div class="risk-row">
@@ -219,7 +233,6 @@
       "ETHUSD": {contract: 1, pip: 1}
     };
 
-    // Load saved contract size from localStorage
     function loadOverride(instrument) {
       let overrides = JSON.parse(localStorage.getItem("contractOverrides") || "{}");
       return overrides[instrument] || null;
@@ -246,7 +259,7 @@
       let balance = parseFloat(document.getElementById('balance').value);
       let instrument = document.getElementById('instrumentSearch').value.toUpperCase().trim();
       let contractSize = parseFloat(document.getElementById('contractSize').value);
-      let leverage = parseFloat(document.getElementById('leverage').value); // optional
+      let leverage = parseFloat(document.getElementById('leverage').value);
       let riskMode = document.getElementById('riskMode').value;
       let risk = parseFloat(document.getElementById('risk').value);
       let sl = parseFloat(document.getElementById('sl').value);
@@ -256,7 +269,6 @@
         return;
       }
 
-      // Load defaults if missing
       let pipSize = defaults[instrument]?.pip || 0.0001;
       if (!contractSize && defaults[instrument]) contractSize = defaults[instrument].contract;
 
@@ -265,24 +277,13 @@
         return;
       }
 
-      // Save override
       saveOverride(instrument, contractSize);
 
-      // Pip value calculation
       let pipValue = (pipSize * contractSize);
-
-      // Risk amount
       let riskAmount = (riskMode === "percent") ? (balance * risk / 100) : risk;
-
-      // Lot size
       let lotSize = riskAmount / (sl * pipValue);
+      let margin = (!isNaN(leverage) && leverage > 0) ? (contractSize * lotSize) / leverage : null;
 
-      // Margin requirement (only if leverage provided)
-      let margin = (!isNaN(leverage) && leverage > 0) 
-        ? (contractSize * lotSize) / leverage 
-        : null;
-
-      // Output
       let html = `
         <p><b>${instrument}</b></p>
         <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
@@ -292,11 +293,9 @@
       if (margin !== null) {
         html += `<p>Margin Required: ${margin.toFixed(2)} USD</p>`;
       }
-
       document.getElementById('result').innerHTML = html;
     }
 
-    // Attach event
     document.getElementById("calcBtn").addEventListener("click", calculate);
 
     // 🌙 Theme Toggle + Save
@@ -310,7 +309,6 @@
         themeToggle.classList.remove("active");
       }
     }
-    // Load theme
     applyTheme(localStorage.getItem("theme") === "light");
     themeToggle.addEventListener("click", () => {
       let isLight = document.body.classList.toggle("light");
