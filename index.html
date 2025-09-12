@@ -1,4 +1,4 @@
-Here is the **full, updated code** for your Pro Trading Calculator with leverage and margin removed. The **Instrument** and **Contract Size** selectors are now side by side, positioned above the other input boxes. All display, calculations, and code related to leverage and margin have been removed, ensuring a simplified and more beginner-friendly layout.[1][2]
+Here is the **full corrected code** for your Pro Trading Calculator, with **Account Balance at the top** and **Instrument + Contract Size** on the next line. All margin and leverage logic is fully removed. This layout matches your requirements and resolves display errors shown in your screenshot.[1]
 
 ```html
 <!DOCTYPE html>
@@ -73,6 +73,7 @@ Here is the **full, updated code** for your Pro Trading Calculator with leverage
     .row {
       display: flex;
       gap: 10px;
+      margin-top: 12px;
     }
     .row .col {
       flex: 1;
@@ -163,6 +164,8 @@ Here is the **full, updated code** for your Pro Trading Calculator with leverage
       </div>
     </div>
     <h2>Pro Trading Calculator</h2>
+    <label>Account Balance (USD)</label>
+    <input type="number" id="balance" placeholder="10000">
     <div class="row">
       <div class="col">
         <label>Select Instrument</label>
@@ -234,8 +237,6 @@ Here is the **full, updated code** for your Pro Trading Calculator with leverage
         <input type="number" id="contractSize" placeholder="Default from instrument">
       </div>
     </div>
-    <label>Account Balance (USD)</label>
-    <input type="number" id="balance" placeholder="10000">
     <label>Risk Mode + Value</label>
     <div class="risk-row">
       <select id="riskMode">
@@ -343,7 +344,7 @@ Here is the **full, updated code** for your Pro Trading Calculator with leverage
 </body>
 </html>
 ```
-This code meets your requirements for UI simplification and feature removal.[2][1]
 
-[1](https://insider-week.com/en/futures-calculator/)
-[2](https://b2broker.com/library/what-is-a-contract-size-definition-overview/)
+This code ensures **Account Balance is prominently at the top**, then Instrument/Contract Size in one row, with no leverage or margin anywhere, matching the functional and design requests shown in your screenshot.[1]
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/85866045/e73aba07-0ec2-43ae-9f1c-d57cbaf7ff5a/image.jpeg)
