@@ -167,7 +167,7 @@
       <div class="col">
         <label>Select Instrument</label>
         <select id="instrumentSelect">
-          <option value=""></option>
+          <option value="">-- Choose Instrument --</option>
           <optgroup label="Popular Instruments">
             <option value="EURUSD">EURUSD</option>
             <option value="GBPUSD">GBPUSD</option>
@@ -176,7 +176,7 @@
             <option value="USDJPY">USDJPY</option>
             <option value="XAUUSD">XAUUSD (Gold)</option>
             <option value="NAS100">NAS100 (Nasdaq)</option>
-            <option value="SPX500">S&P500 (US500)</option>
+            <option value="SPX500">S&P500</option>
             <option value="GER40">GER30 / GER40</option>
           </optgroup>
           <optgroup label="Forex Majors">
@@ -231,7 +231,7 @@
       </div>
       <div class="col">
         <label>Contract Size</label>
-        <input type="number" id="contractSize" placeholder="">
+        <input type="number" id="contractSize" placeholder="Default from instrument">
       </div>
     </div>
     <label>Risk Mode + Value</label>
@@ -264,16 +264,20 @@
       "BTCUSD": {contract: 1, pip: 1},
       "ETHUSD": {contract: 1, pip: 1}
     };
+
     // Hard-coded pip values (USD per lot)
     const pipValues = {
       "EURUSD": 10, "GBPUSD": 10, "AUDUSD": 10, "NZDUSD": 10, "USDCAD": 7.21923, "USDCHF": 12.53604,
-      "USDJPY": 6.76123, "GBPJPY": 6.76123, "EURJPY": 6.76123, "AUDJPY": 6.76123, "NZDJPY": 6.76123, "CADJPY": 6.76123, "CHFJPY": 6.76123,
+      "USDJPY": 6.76123, "GBPJPY": 6.76123, "EURJPY": 6.76123, "AUDJPY": 6.76123,
+      "NZDJPY": 6.76123, "CADJPY": 6.76123, "CHFJPY": 6.76123,
       "EURGBP": 13.541, "EURCHF": 12.53604, "EURAUD": 6.6382, "EURNZD": 5.9459, "EURCAD": 7.21923,
       "GBPCHF": 12.53604, "GBPAUD": 6.6382, "GBPCAD": 7.21923, "GBPNZD": 5.9459,
-      "AUDNZD": 5.9459, "AUDCAD": 7.21923, "AUDCHF": 12.53604, "NZDCAD": 7.21923, "NZDCHF": 12.53604, "CADCHF": 12.53604,
+      "AUDNZD": 5.9459, "AUDCAD": 7.21923, "AUDCHF": 12.53604, "NZDCAD": 7.21923,
+      "NZDCHF": 12.53604, "CADCHF": 12.53604,
       "XAUUSD": 10, "XAGUSD": 5,
-      "WTIUSD": 1, "GER30": 1.17, "UKOILUSD": 1
+      "WTIUSD": 1, "UKOILUSD": 1, "GER30": 1.17
     };
+
     function loadOverride(instrument) {
       let overrides = JSON.parse(localStorage.getItem("contractOverrides") || "{}");
       return overrides[instrument] || null;
@@ -296,6 +300,7 @@
         }
       }
     });
+
     function calculate() {
       let balance = parseFloat(document.getElementById('balance').value);
       let instrument = document.getElementById('instrumentSelect').value;
@@ -309,14 +314,23 @@
       }
       if (!contractSize && defaults[instrument]) contractSize = defaults[instrument].contract;
       saveOverride(instrument, contractSize);
-      let pipValue = pipValues[instrument] || ((defaults[instrument]?.pip || 0.0001) * contractSize);
+
+      // Correct pip value selection
+      let pipValue;
+      if (pipValues[instrument]) {
+        pipValue = pipValues[instrument]; // indices, metals, etc., use fixed dollar pip value
+      } else if (defaults[instrument]) {
+        pipValue = defaults[instrument].pip * contractSize;
+      } else {
+        pipValue = 1;
+      }
 
       let lotSize, html;
       if (riskMode === "percent") {
         let riskAmount = balance * risk / 100;
         lotSize = riskAmount / (sl * pipValue);
         html = `
-          <p><b>${instrument}</b></p>
+          <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
           <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
           <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
         `;
@@ -325,14 +339,16 @@
         let riskPercent = (riskAmount / balance) * 100;
         lotSize = riskAmount / (sl * pipValue);
         html = `
-          <p><b>${instrument}</b></p>
+          <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
           <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
           <p>Risk %: ${riskPercent.toFixed(2)}%</p>
         `;
       }
       document.getElementById('result').innerHTML = html;
     }
+
     document.getElementById("calcBtn").addEventListener("click", calculate);
+
     // 🌙 Theme Toggle + Save
     const themeToggle = document.getElementById("themeToggle");
     function applyTheme(light) {
