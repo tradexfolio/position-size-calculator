@@ -176,26 +176,78 @@
     <label>Account Balance (USD)</label>
     <input type="number" id="balance" placeholder="10000">
 
-    <label>Instrument + Contract Size</label>
+    <label>Select Instrument</label>
+    <select id="instrumentSelect">
+      <option value="">-- Choose Instrument --</option>
+      <optgroup label="Popular Instruments">
+        <option value="EURUSD">EURUSD</option>
+        <option value="GBPUSD">GBPUSD</option>
+        <option value="AUDUSD">AUDUSD</option>
+        <option value="GBPJPY">GBPJPY</option>
+        <option value="USDJPY">USDJPY</option>
+        <option value="XAUUSD">XAUUSD (Gold)</option>
+        <option value="NAS100">NAS100 (Nasdaq)</option>
+        <option value="SPX500">S&P500</option>
+        <option value="GER40">GER30 / GER40</option>
+      </optgroup>
+      <optgroup label="Forex Majors">
+<option value="EURUSD">EURUSD</option>
+        <option value="GBPUSD">GBPUSD</option>
+        <option value="AUDUSD">AUDUSD</option>
+        <option value="USDJPY">USDJPY</option>
+        <option value="USDCAD">USDCAD</option>
+        <option value="USDCHF">USDCHF</option>
+        <option value="NZDUSD">NZDUSD</option>
+      </optgroup>
+      <optgroup label="Forex Minors">
+        <option value="EURGBP">EURGBP</option>
+        <option value="EURJPY">EURJPY</option>
+        <option value="EURCHF">EURCHF</option>
+        <option value="EURAUD">EURAUD</option>
+        <option value="EURNZD">EURNZD</option>
+        <option value="EURCAD">EURCAD</option>
+<option value="GBPJPY">GBPJPY</option>
+        <option value="GBPCHF">GBPCHF</option>
+        <option value="GBPAUD">GBPAUD</option>
+        <option value="GBPCAD">GBPCAD</option>
+        <option value="GBPNZD">GBPNZD</option>
+        <option value="AUDJPY">AUDJPY</option>
+        <option value="AUDNZD">AUDNZD</option>
+        <option value="AUDCAD">AUDCAD</option>
+        <option value="AUDCHF">AUDCHF</option>
+        <option value="NZDJPY">NZDJPY</option>
+        <option value="NZDCAD">NZDCAD</option>
+        <option value="NZDCHF">NZDCHF</option>
+        <option value="CADJPY">CADJPY</option>
+        <option value="CADCHF">CADCHF</option>
+        <option value="CHFJPY">CHFJPY</option>
+      </optgroup>
+      <optgroup label="Metals & Commodities">
+<option value="XAUUSD">XAUUSD (Gold)</option>
+        <option value="XAGUSD">XAGUSD (Silver)</option>
+        <option value="WTIUSD">WTIUSD (Crude Oil)</option>
+        <option value="UKOILUSD">UKOILUSD (Brent Oil)</option>
+      </optgroup>
+      <optgroup label="Indices">
+        <option value="NAS100">NAS100 (Nasdaq)</option>
+        <option value="SPX500">S&P500 (US500)</option>
+        <option value="GER30">GER30/GER40</option>
+        <option value="US30">US30 (Dow Jones)</option>
+      </optgroup>
+      <optgroup label="Cryptocurrencies">
+        <option value="BTCUSD">BTCUSD (Bitcoin)</option>
+        <option value="ETHUSD">ETHUSD (Ethereum)</option>
+      </optgroup>
+    </select>
+
     <div class="row">
       <div class="col">
-        <select id="instrumentSelect">
-          <option value="">-- Choose Instrument --</option>
-          <optgroup label="Popular Instruments">
-            <option value="EURUSD">EURUSD</option>
-            <option value="GBPUSD">GBPUSD</option>
-            <option value="AUDUSD">AUDUSD</option>
-            <option value="GBPJPY">GBPJPY</option>
-            <option value="USDJPY">USDJPY</option>
-            <option value="XAUUSD">XAUUSD (Gold)</option>
-            <option value="NAS100">NAS100 (Nasdaq)</option>
-            <option value="SPX500">S&P500</option>
-            <option value="GER40">GER40 (DAX)</option>
-          </optgroup>
-        </select>
+        <label>Contract Size</label>
+        <input type="number" id="contractSize" placeholder="Default from instrument">
       </div>
       <div class="col">
-        <input type="number" id="contractSize" placeholder="Default size">
+        <label>Leverage (optional)</label>
+        <input type="number" id="leverage" placeholder="e.g. 100">
       </div>
     </div>
 
@@ -234,7 +286,7 @@
       "ETHUSD": {contract: 1, pip: 1}
     };
 
-    // Hard-coded pip values (your original)
+    // Hard-coded pip values (USD per lot)
     const pipValues = {
       "EURUSD": 10, "GBPUSD": 10, "AUDUSD": 10, "NZDUSD": 10, "USDCAD": 7.21923, "USDCHF": 12.53604,
       "USDJPY": 6.76123, "GBPJPY": 6.76123, "EURJPY": 6.76123, "AUDJPY": 6.76123, "NZDJPY": 6.76123, "CADJPY": 6.76123, "CHFJPY": 6.76123,
@@ -256,24 +308,29 @@
       localStorage.setItem("contractOverrides", JSON.stringify(overrides));
     }
 
-    document.getElementById("instrumentSelect").addEventListener("change", function() {
-      let inst = this.value;
-      if (!inst) return;
-      const contractField = document.getElementById("contractSize");
-      let saved = loadOverride(inst);
-      if (saved) {
-        contractField.value = saved;
-      } else if (defaults[inst]) {
-        if (!contractField.value || contractField.value === "0") {
-          contractField.value = defaults[inst].contract;
-        }
-      }
-    });
+   document.getElementById("instrumentSelect").addEventListener("change", function() {
+  let inst = this.value;
+  if (!inst) return;
+
+  const contractField = document.getElementById("contractSize");
+  let saved = loadOverride(inst);
+
+  if (saved) {
+    contractField.value = saved;
+  } else if (defaults[inst]) {
+    // Only set default if field is empty
+    if (!contractField.value || contractField.value === "0") {
+      contractField.value = defaults[inst].contract;
+    }
+  }
+});
+
 
     function calculate() {
       let balance = parseFloat(document.getElementById('balance').value);
       let instrument = document.getElementById('instrumentSelect').value;
       let contractSize = parseFloat(document.getElementById('contractSize').value);
+      let leverage = parseFloat(document.getElementById('leverage').value);
       let riskMode = document.getElementById('riskMode').value;
       let risk = parseFloat(document.getElementById('risk').value);
       let sl = parseFloat(document.getElementById('sl').value);
@@ -289,18 +346,22 @@
       let pipValue = pipValues[instrument] || ((defaults[instrument]?.pip || 0.0001) * contractSize);
       let riskAmount = (riskMode === "percent") ? (balance * risk / 100) : risk;
       let lotSize = riskAmount / (sl * pipValue);
+      let margin = (!isNaN(leverage) && leverage > 0) ? (contractSize * lotSize) / leverage : null;
 
       let html = `
         <p><b>${instrument}</b></p>
         <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
         <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
       `;
+      if (margin !== null) {
+        html += `<p>Margin Required: ${margin.toFixed(2)} USD</p>`;
+      }
       document.getElementById('result').innerHTML = html;
     }
 
     document.getElementById("calcBtn").addEventListener("click", calculate);
 
-    // 🌙 Theme Toggle
+    // 🌙 Theme Toggle + Save
     const themeToggle = document.getElementById("themeToggle");
     function applyTheme(light) {
       if (light) {
