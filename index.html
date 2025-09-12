@@ -311,16 +311,23 @@
       localStorage.setItem("contractOverrides", JSON.stringify(overrides));
     }
 
-    document.getElementById("instrumentSelect").addEventListener("change", function() {
-      let inst = this.value;
-      if (!inst) return;
-      let saved = loadOverride(inst);
-      if (saved) {
-        document.getElementById("contractSize").value = saved;
-      } else if (defaults[inst]) {
-        document.getElementById("contractSize").value = defaults[inst].contract;
-      }
-    });
+   document.getElementById("instrumentSelect").addEventListener("change", function() {
+  let inst = this.value;
+  if (!inst) return;
+
+  const contractField = document.getElementById("contractSize");
+  let saved = loadOverride(inst);
+
+  if (saved) {
+    contractField.value = saved;
+  } else if (defaults[inst]) {
+    // Only set default if field is empty
+    if (!contractField.value || contractField.value === "0") {
+      contractField.value = defaults[inst].contract;
+    }
+  }
+});
+
 
     function calculate() {
       let balance = parseFloat(document.getElementById('balance').value);
