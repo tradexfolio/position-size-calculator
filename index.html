@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Position Size Calculator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -162,7 +163,7 @@
     </div>
     <h2>Position Size Calculator</h2>
     <label>Account Balance (USD)</label>
-    <input type="number" id="balance" placeholder="10000">
+    <input type="number" id="balance" placeholder="10000" />
     <div class="row">
       <div class="col">
         <label>Select Instrument</label>
@@ -231,7 +232,7 @@
       </div>
       <div class="col">
         <label>Contract Size</label>
-        <input type="number" id="contractSize" placeholder="">
+        <input type="number" id="contractSize" placeholder="" />
       </div>
     </div>
     <label>Risk Mode + Value</label>
@@ -240,13 +241,15 @@
         <option value="percent">Risk %</option>
         <option value="fixed">Fixed $</option>
       </select>
-      <input type="number" id="risk" placeholder="1">
+      <input type="number" id="risk" placeholder="1" />
     </div>
     <label>Stop Loss (pips / points)</label>
-    <input type="number" id="sl" placeholder="50">
+    <input type="number" id="sl" placeholder="50" />
     <button id="calcBtn">Calculate</button>
     <div class="result" id="result"></div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
   <script>
     const defaults = {
       "EURUSD": {contract: 100000, pip: 0.0001},
@@ -356,6 +359,7 @@
       document.getElementById('result').innerHTML = html;
     }
     document.getElementById("calcBtn").addEventListener("click", calculate);
+
     // 🌙 Theme Toggle + Save
     const themeToggle = document.getElementById("themeToggle");
     function applyTheme(light) {
@@ -372,6 +376,19 @@
       let isLight = document.body.classList.toggle("light");
       themeToggle.classList.toggle("active");
       localStorage.setItem("theme", isLight ? "light" : "dark");
+    });
+
+    // Enable Choices.js (searchable dropdown)
+    document.addEventListener('DOMContentLoaded', function() {
+      const instrumentSelect = document.getElementById('instrumentSelect');
+      const choices = new Choices(instrumentSelect, {
+        searchEnabled: true,
+        shouldSort: false,
+        itemSelectText: '', // Optional: removes "Press to select" text
+        placeholder: true,
+        searchPlaceholderValue: "Type or search instrument...",
+      });
+      // Choices.js is purely cosmetic; onchange events still fire as normal
     });
   </script>
 </body>
