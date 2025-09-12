@@ -11,10 +11,10 @@
       color: white;
       display: flex;
       justify-content: center;
-      align-items: flex-start;  /* push to top */
+      align-items: flex-start;
       min-height: 100vh;
       margin: 0;
-      padding: 30px 15px; /* padding at top */
+      padding: 30px 15px;
       transition: background 0.3s, color 0.3s;
     }
     body.light {
@@ -178,75 +178,68 @@
 
     <label>Select Instrument</label>
     <select id="instrumentSelect">
-  <option value="">-- Choose Instrument --</option>
-
-  <optgroup label="Popular Instruments">
-    <option value="EURUSD">EURUSD</option>
-    <option value="GBPUSD">GBPUSD</option>
-    <option value="AUDUSD">AUDUSD</option>
-    <option value="GBPJPY">GBPJPY</option>
-    <option value="USDJPY">USDJPY</option>
-    <option value="XAUUSD">XAUUSD (Gold)</option>
-    <option value="NAS100">NAS100 (Nasdaq)</option>
-    <option value="SPX500">S&P500</option>
-    <option value="GER40">GER30 / GER40</option>
-  </optgroup>
-
-  <optgroup label="Forex Majors">
-    <option value="USDCAD">USDCAD</option>
-    <option value="USDCHF">USDCHF</option>
-    <option value="NZDUSD">NZDUSD</option>
-  </optgroup>
-
-  <optgroup label="Forex Minors">
-    <option value="EURGBP">EURGBP</option>
-    <option value="EURJPY">EURJPY</option>
-    <option value="EURCHF">EURCHF</option>
-    <option value="EURAUD">EURAUD</option>
-    <option value="EURNZD">EURNZD</option>
-    <option value="EURCAD">EURCAD</option>
-    <option value="GBPCHF">GBPCHF</option>
-    <option value="GBPAUD">GBPAUD</option>
-    <option value="GBPCAD">GBPCAD</option>
-    <option value="GBPNZD">GBPNZD</option>
-    <option value="AUDJPY">AUDJPY</option>
-    <option value="AUDNZD">AUDNZD</option>
-    <option value="AUDCAD">AUDCAD</option>
-    <option value="AUDCHF">AUDCHF</option>
-    <option value="NZDJPY">NZDJPY</option>
-    <option value="NZDCAD">NZDCAD</option>
-    <option value="NZDCHF">NZDCHF</option>
-    <option value="CADJPY">CADJPY</option>
-    <option value="CADCHF">CADCHF</option>
-    <option value="CHFJPY">CHFJPY</option>
-  </optgroup>
-
-  <optgroup label="Metals & Commodities">
-    <option value="XAGUSD">XAGUSD (Silver)</option>
-    <option value="XPTUSD">XPTUSD (Platinum)</option>
-    <option value="XPDUSD">XPDUSD (Palladium)</option>
-    <option value="WTIUSD">WTIUSD (Crude Oil)</option>
-    <option value="UKOILUSD">UKOILUSD (Brent Oil)</option>
-  </optgroup>
-
-  <optgroup label="Indices">
-    <option value="US30">US30 (Dow Jones)</option>
-    <option value="FRA40">FRA40 (CAC 40)</option>
-    <option value="JPN225">JPN225 (Nikkei 225)</option>
-    <option value="HK50">HK50 (Hang Seng)</option>
-    <option value="AUS200">AUS200 (ASX 200)</option>
-    <option value="UK100">UK100 (FTSE 100)</option>
-    <option value="ES35">ES35 (IBEX 35)</option>
-  </optgroup>
-
-  <optgroup label="Cryptocurrencies">
-    <option value="BTCUSD">BTCUSD (Bitcoin)</option>
-    <option value="ETHUSD">ETHUSD (Ethereum)</option>
-    <option value="LTCUSD">LTCUSD (Litecoin)</option>
-    <option value="XRPUSD">XRPUSD (Ripple)</option>
-  </optgroup>
-</select>
-
+      <option value="">-- Choose Instrument --</option>
+      <optgroup label="Popular Instruments">
+        <option value="EURUSD">EURUSD</option>
+        <option value="GBPUSD">GBPUSD</option>
+        <option value="AUDUSD">AUDUSD</option>
+        <option value="GBPJPY">GBPJPY</option>
+        <option value="USDJPY">USDJPY</option>
+        <option value="XAUUSD">XAUUSD (Gold)</option>
+        <option value="NAS100">NAS100 (Nasdaq)</option>
+        <option value="SPX500">S&P500</option>
+        <option value="GER40">GER30 / GER40</option>
+      </optgroup>
+      <optgroup label="Forex Majors">
+        <option value="USDCAD">USDCAD</option>
+        <option value="USDCHF">USDCHF</option>
+        <option value="NZDUSD">NZDUSD</option>
+      </optgroup>
+      <optgroup label="Forex Minors">
+        <option value="EURGBP">EURGBP</option>
+        <option value="EURJPY">EURJPY</option>
+        <option value="EURCHF">EURCHF</option>
+        <option value="EURAUD">EURAUD</option>
+        <option value="EURNZD">EURNZD</option>
+        <option value="EURCAD">EURCAD</option>
+        <option value="GBPCHF">GBPCHF</option>
+        <option value="GBPAUD">GBPAUD</option>
+        <option value="GBPCAD">GBPCAD</option>
+        <option value="GBPNZD">GBPNZD</option>
+        <option value="AUDJPY">AUDJPY</option>
+        <option value="AUDNZD">AUDNZD</option>
+        <option value="AUDCAD">AUDCAD</option>
+        <option value="AUDCHF">AUDCHF</option>
+        <option value="NZDJPY">NZDJPY</option>
+        <option value="NZDCAD">NZDCAD</option>
+        <option value="NZDCHF">NZDCHF</option>
+        <option value="CADJPY">CADJPY</option>
+        <option value="CADCHF">CADCHF</option>
+        <option value="CHFJPY">CHFJPY</option>
+      </optgroup>
+      <optgroup label="Metals & Commodities">
+        <option value="XAGUSD">XAGUSD (Silver)</option>
+        <option value="XPTUSD">XPTUSD (Platinum)</option>
+        <option value="XPDUSD">XPDUSD (Palladium)</option>
+        <option value="WTIUSD">WTIUSD (Crude Oil)</option>
+        <option value="UKOILUSD">UKOILUSD (Brent Oil)</option>
+      </optgroup>
+      <optgroup label="Indices">
+        <option value="US30">US30 (Dow Jones)</option>
+        <option value="FRA40">FRA40 (CAC 40)</option>
+        <option value="JPN225">JPN225 (Nikkei 225)</option>
+        <option value="HK50">HK50 (Hang Seng)</option>
+        <option value="AUS200">AUS200 (ASX 200)</option>
+        <option value="UK100">UK100 (FTSE 100)</option>
+        <option value="ES35">ES35 (IBEX 35)</option>
+      </optgroup>
+      <optgroup label="Cryptocurrencies">
+        <option value="BTCUSD">BTCUSD (Bitcoin)</option>
+        <option value="ETHUSD">ETHUSD (Ethereum)</option>
+        <option value="LTCUSD">LTCUSD (Litecoin)</option>
+        <option value="XRPUSD">XRPUSD (Ripple)</option>
+      </optgroup>
+    </select>
 
     <div class="row">
       <div class="col">
@@ -294,6 +287,19 @@
       "ETHUSD": {contract: 1, pip: 1}
     };
 
+    // Hard-coded pip values (USD per lot)
+    const pipValues = {
+      "EURUSD": 10, "GBPUSD": 10, "AUDUSD": 10, "NZDUSD": 10, "USDCAD": 10, "USDCHF": 10,
+      "USDJPY": 9.1, "GBPJPY": 9.1, "EURJPY": 9.1, "AUDJPY": 9.1, "NZDJPY": 9.1, "CADJPY": 9.1, "CHFJPY": 9.1,
+      "EURGBP": 10, "EURCHF": 10, "EURAUD": 10, "EURNZD": 10, "EURCAD": 10,
+      "GBPCHF": 10, "GBPAUD": 10, "GBPCAD": 10, "GBPNZD": 10,
+      "AUDNZD": 10, "AUDCAD": 10, "AUDCHF": 10, "NZDCAD": 10, "NZDCHF": 10, "CADCHF": 10,
+      "XAUUSD": 1, "XAGUSD": 5, "XPTUSD": 1, "XPDUSD": 1,
+      "WTIUSD": 1, "UKOILUSD": 1,
+      "US30": 1, "NAS100": 1, "SPX500": 0.1, "GER40": 1, "FRA40": 1, "JPN225": 1, "HK50": 1, "AUS200": 1, "UK100": 1, "ES35": 1,
+      "BTCUSD": 1, "ETHUSD": 1, "LTCUSD": 1, "XRPUSD": 1
+    };
+
     function loadOverride(instrument) {
       let overrides = JSON.parse(localStorage.getItem("contractOverrides") || "{}");
       return overrides[instrument] || null;
@@ -330,17 +336,10 @@
         return;
       }
 
-      let pipSize = defaults[instrument]?.pip || 0.0001;
       if (!contractSize && defaults[instrument]) contractSize = defaults[instrument].contract;
-
-      if (!contractSize || !pipSize) {
-        document.getElementById('result').innerHTML = "<p>⚠ Unknown instrument!</p>";
-        return;
-      }
-
       saveOverride(instrument, contractSize);
 
-      let pipValue = (pipSize * contractSize);
+      let pipValue = pipValues[instrument] || ((defaults[instrument]?.pip || 0.0001) * contractSize);
       let riskAmount = (riskMode === "percent") ? (balance * risk / 100) : risk;
       let lotSize = riskAmount / (sl * pipValue);
       let margin = (!isNaN(leverage) && leverage > 0) ? (contractSize * lotSize) / leverage : null;
@@ -348,7 +347,6 @@
       let html = `
         <p><b>${instrument}</b></p>
         <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
-        <p>Pip Value: ${pipValue.toFixed(4)} USD per lot</p>
         <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
       `;
       if (margin !== null) {
