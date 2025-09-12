@@ -177,7 +177,7 @@
             <option value="XAUUSD">XAUUSD (Gold)</option>
             <option value="NAS100">NAS100 (Nasdaq)</option>
             <option value="SPX500">S&P500</option>
-            <option value="GER40">GER30 / GER40</option>
+            <option value="GER30">GER30 / GER40</option>
           </optgroup>
           <optgroup label="Forex Majors">
             <option value="EURUSD">EURUSD</option>
@@ -248,7 +248,6 @@
     <div class="result" id="result"></div>
   </div>
   <script>
-    // Default contract sizes & pip sizes
     const defaults = {
       "EURUSD": {contract: 100000, pip: 0.0001},
       "GBPUSD": {contract: 100000, pip: 0.0001},
@@ -265,7 +264,6 @@
       "ETHUSD": {contract: 1, pip: 1}
     };
 
-    // Hard-coded pip values (USD per lot)
     const pipValues = {
       "EURUSD": 10, "GBPUSD": 10, "AUDUSD": 10, "NZDUSD": 10, "USDCAD": 7.21923, "USDCHF": 12.53604,
       "USDJPY": 6.76123, "GBPJPY": 6.76123, "EURJPY": 6.76123, "AUDJPY": 6.76123,
@@ -315,34 +313,49 @@
       if (!contractSize && defaults[instrument]) contractSize = defaults[instrument].contract;
       saveOverride(instrument, contractSize);
 
-      // Correct pip value selection
-      let pipValue;
+      let lotSize, html, riskAmount, riskPercent;
       if (pipValues[instrument]) {
-        pipValue = pipValues[instrument]; // indices, metals, etc., use fixed dollar pip value
+        let pipValue = pipValues[instrument];
+        if (riskMode === "percent") {
+          riskAmount = balance * risk / 100;
+          lotSize = riskAmount / (sl * pipValue * contractSize);
+          html = `
+            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
+            <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
+          `;
+        } else {
+          riskAmount = risk;
+          riskPercent = (riskAmount / balance) * 100;
+          lotSize = riskAmount / (sl * pipValue * contractSize);
+          html = `
+            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
+            <p>Risk %: ${riskPercent.toFixed(2)}%</p>
+          `;
+        }
       } else if (defaults[instrument]) {
-        pipValue = defaults[instrument].pip * contractSize;
+        let pipValue = defaults[instrument].pip;
+        if (riskMode === "percent") {
+          riskAmount = balance * risk / 100;
+          lotSize = riskAmount / (sl * pipValue * contractSize);
+          html = `
+            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
+            <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
+          `;
+        } else {
+          riskAmount = risk;
+          riskPercent = (riskAmount / balance) * 100;
+          lotSize = riskAmount / (sl * pipValue * contractSize);
+          html = `
+            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
+            <p>Risk %: ${riskPercent.toFixed(2)}%</p>
+          `;
+        }
       } else {
-        pipValue = 1;
-      }
-
-      let lotSize, html;
-      if (riskMode === "percent") {
-        let riskAmount = balance * risk / 100;
-        lotSize = riskAmount / (sl * pipValue);
-        html = `
-          <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
-          <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
-          <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
-        `;
-      } else {
-        let riskAmount = risk;
-        let riskPercent = (riskAmount / balance) * 100;
-        lotSize = riskAmount / (sl * pipValue);
-        html = `
-          <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
-          <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
-          <p>Risk %: ${riskPercent.toFixed(2)}%</p>
-        `;
+        html = "<p>Instrument not configured.</p>";
       }
       document.getElementById('result').innerHTML = html;
     }
