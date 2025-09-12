@@ -37,7 +37,6 @@
     body.light button:hover {
       background: #d1d1d1;
     }
-
     .calculator {
       background: #15181d;
       padding: 20px;
@@ -47,19 +46,16 @@
       box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
       position: relative;
     }
-
     .calculator h2 {
       text-align: center;
       margin-bottom: 15px;
       font-size: 1.5rem;
     }
-
     .calculator label {
       display: block;
       margin-top: 12px;
       font-size: 0.9rem;
     }
-
     .calculator input, .calculator select {
       width: 100%;
       padding: 10px;
@@ -71,21 +67,19 @@
       font-size: 1rem;
       box-sizing: border-box;
     }
-
     .row {
       display: flex;
       gap: 10px;
+      margin-top: 12px;
     }
     .row .col {
       flex: 1;
     }
-
     .risk-row {
       display: flex;
       gap: 10px;
       align-items: center;
     }
-
     .calculator button {
       margin-top: 20px;
       width: 100%;
@@ -98,11 +92,9 @@
       cursor: pointer;
       transition: background 0.2s;
     }
-
     .calculator button:hover {
       background: #3d3f4d;
     }
-
     .result {
       margin-top: 18px;
       padding: 12px;
@@ -110,11 +102,9 @@
       background: rgba(255,255,255,0.05);
       font-size: 1rem;
     }
-
     .result p {
       margin: 6px 0;
     }
-
     /* 🌙 Toggle Switch */
     .toggle-container {
       position: absolute;
@@ -170,87 +160,80 @@
         <div class="toggle-circle"></div>
       </div>
     </div>
-
     <h2>Pro Trading Calculator</h2>
-
     <label>Account Balance (USD)</label>
     <input type="number" id="balance" placeholder="10000">
-
-    <label>Select Instrument</label>
-    <select id="instrumentSelect">
-      <option value="">-- Choose Instrument --</option>
-      <optgroup label="Popular Instruments">
-        <option value="EURUSD">EURUSD</option>
-        <option value="GBPUSD">GBPUSD</option>
-        <option value="AUDUSD">AUDUSD</option>
-        <option value="GBPJPY">GBPJPY</option>
-        <option value="USDJPY">USDJPY</option>
-        <option value="XAUUSD">XAUUSD (Gold)</option>
-        <option value="NAS100">NAS100 (Nasdaq)</option>
-        <option value="SPX500">S&P500</option>
-        <option value="GER40">GER30 / GER40</option>
-      </optgroup>
-      <optgroup label="Forex Majors">
-<option value="EURUSD">EURUSD</option>
-        <option value="GBPUSD">GBPUSD</option>
-        <option value="AUDUSD">AUDUSD</option>
-        <option value="USDJPY">USDJPY</option>
-        <option value="USDCAD">USDCAD</option>
-        <option value="USDCHF">USDCHF</option>
-        <option value="NZDUSD">NZDUSD</option>
-      </optgroup>
-      <optgroup label="Forex Minors">
-        <option value="EURGBP">EURGBP</option>
-        <option value="EURJPY">EURJPY</option>
-        <option value="EURCHF">EURCHF</option>
-        <option value="EURAUD">EURAUD</option>
-        <option value="EURNZD">EURNZD</option>
-        <option value="EURCAD">EURCAD</option>
-<option value="GBPJPY">GBPJPY</option>
-        <option value="GBPCHF">GBPCHF</option>
-        <option value="GBPAUD">GBPAUD</option>
-        <option value="GBPCAD">GBPCAD</option>
-        <option value="GBPNZD">GBPNZD</option>
-        <option value="AUDJPY">AUDJPY</option>
-        <option value="AUDNZD">AUDNZD</option>
-        <option value="AUDCAD">AUDCAD</option>
-        <option value="AUDCHF">AUDCHF</option>
-        <option value="NZDJPY">NZDJPY</option>
-        <option value="NZDCAD">NZDCAD</option>
-        <option value="NZDCHF">NZDCHF</option>
-        <option value="CADJPY">CADJPY</option>
-        <option value="CADCHF">CADCHF</option>
-        <option value="CHFJPY">CHFJPY</option>
-      </optgroup>
-      <optgroup label="Metals & Commodities">
-<option value="XAUUSD">XAUUSD (Gold)</option>
-        <option value="XAGUSD">XAGUSD (Silver)</option>
-        <option value="WTIUSD">WTIUSD (Crude Oil)</option>
-        <option value="UKOILUSD">UKOILUSD (Brent Oil)</option>
-      </optgroup>
-      <optgroup label="Indices">
-        <option value="NAS100">NAS100 (Nasdaq)</option>
-        <option value="SPX500">S&P500 (US500)</option>
-        <option value="GER30">GER30/GER40</option>
-        <option value="US30">US30 (Dow Jones)</option>
-      </optgroup>
-      <optgroup label="Cryptocurrencies">
-        <option value="BTCUSD">BTCUSD (Bitcoin)</option>
-        <option value="ETHUSD">ETHUSD (Ethereum)</option>
-      </optgroup>
-    </select>
-
     <div class="row">
+      <div class="col">
+        <label>Select Instrument</label>
+        <select id="instrumentSelect">
+          <option value="">-- Choose Instrument --</option>
+          <optgroup label="Popular Instruments">
+            <option value="EURUSD">EURUSD</option>
+            <option value="GBPUSD">GBPUSD</option>
+            <option value="AUDUSD">AUDUSD</option>
+            <option value="GBPJPY">GBPJPY</option>
+            <option value="USDJPY">USDJPY</option>
+            <option value="XAUUSD">XAUUSD (Gold)</option>
+            <option value="NAS100">NAS100 (Nasdaq)</option>
+            <option value="SPX500">S&P500</option>
+            <option value="GER30">GER30 / GER40</option>
+          </optgroup>
+          <optgroup label="Forex Majors">
+            <option value="EURUSD">EURUSD</option>
+            <option value="GBPUSD">GBPUSD</option>
+            <option value="AUDUSD">AUDUSD</option>
+            <option value="USDJPY">USDJPY</option>
+            <option value="USDCAD">USDCAD</option>
+            <option value="USDCHF">USDCHF</option>
+            <option value="NZDUSD">NZDUSD</option>
+          </optgroup>
+          <optgroup label="Forex Minors">
+            <option value="EURGBP">EURGBP</option>
+            <option value="EURJPY">EURJPY</option>
+            <option value="EURCHF">EURCHF</option>
+            <option value="EURAUD">EURAUD</option>
+            <option value="EURNZD">EURNZD</option>
+            <option value="EURCAD">EURCAD</option>
+            <option value="GBPJPY">GBPJPY</option>
+            <option value="GBPCHF">GBPCHF</option>
+            <option value="GBPAUD">GBPAUD</option>
+            <option value="GBPCAD">GBPCAD</option>
+            <option value="GBPNZD">GBPNZD</option>
+            <option value="AUDJPY">AUDJPY</option>
+            <option value="AUDNZD">AUDNZD</option>
+            <option value="AUDCAD">AUDCAD</option>
+            <option value="AUDCHF">AUDCHF</option>
+            <option value="NZDJPY">NZDJPY</option>
+            <option value="NZDCAD">NZDCAD</option>
+            <option value="NZDCHF">NZDCHF</option>
+            <option value="CADJPY">CADJPY</option>
+            <option value="CADCHF">CADCHF</option>
+            <option value="CHFJPY">CHFJPY</option>
+          </optgroup>
+          <optgroup label="Metals & Commodities">
+            <option value="XAUUSD">XAUUSD (Gold)</option>
+            <option value="XAGUSD">XAGUSD (Silver)</option>
+            <option value="WTIUSD">WTIUSD (Crude Oil)</option>
+            <option value="UKOILUSD">UKOILUSD (Brent Oil)</option>
+          </optgroup>
+          <optgroup label="Indices">
+            <option value="NAS100">NAS100 (Nasdaq)</option>
+            <option value="SPX500">S&P500 (US500)</option>
+            <option value="GER30">GER30/GER40</option>
+            <option value="US30">US30 (Dow Jones)</option>
+          </optgroup>
+          <optgroup label="Cryptocurrencies">
+            <option value="BTCUSD">BTCUSD (Bitcoin)</option>
+            <option value="ETHUSD">ETHUSD (Ethereum)</option>
+          </optgroup>
+        </select>
+      </div>
       <div class="col">
         <label>Contract Size</label>
         <input type="number" id="contractSize" placeholder="Default from instrument">
       </div>
-      <div class="col">
-        <label>Leverage (optional)</label>
-        <input type="number" id="leverage" placeholder="e.g. 100">
-      </div>
     </div>
-
     <label>Risk Mode + Value</label>
     <div class="risk-row">
       <select id="riskMode">
@@ -259,17 +242,12 @@
       </select>
       <input type="number" id="risk" placeholder="1">
     </div>
-
     <label>Stop Loss (pips / points)</label>
     <input type="number" id="sl" placeholder="50">
-
     <button id="calcBtn">Calculate</button>
-
     <div class="result" id="result"></div>
   </div>
-
   <script>
-    // Default contract sizes & pip sizes
     const defaults = {
       "EURUSD": {contract: 100000, pip: 0.0001},
       "GBPUSD": {contract: 100000, pip: 0.0001},
@@ -286,13 +264,14 @@
       "ETHUSD": {contract: 1, pip: 1}
     };
 
-    // Hard-coded pip values (USD per lot)
     const pipValues = {
       "EURUSD": 10, "GBPUSD": 10, "AUDUSD": 10, "NZDUSD": 10, "USDCAD": 7.21923, "USDCHF": 12.53604,
-      "USDJPY": 6.76123, "GBPJPY": 6.76123, "EURJPY": 6.76123, "AUDJPY": 6.76123, "NZDJPY": 6.76123, "CADJPY": 6.76123, "CHFJPY": 6.76123,
+      "USDJPY": 6.76123, "GBPJPY": 6.76123, "EURJPY": 6.76123, "AUDJPY": 6.76123,
+      "NZDJPY": 6.76123, "CADJPY": 6.76123, "CHFJPY": 6.76123,
       "EURGBP": 13.541, "EURCHF": 12.53604, "EURAUD": 6.6382, "EURNZD": 5.9459, "EURCAD": 7.21923,
       "GBPCHF": 12.53604, "GBPAUD": 6.6382, "GBPCAD": 7.21923, "GBPNZD": 5.9459,
-      "AUDNZD": 5.9459, "AUDCAD": 7.21923, "AUDCHF": 12.53604, "NZDCAD": 7.21923, "NZDCHF": 12.53604, "CADCHF": 12.53604,
+      "AUDNZD": 5.9459, "AUDCAD": 7.21923, "AUDCHF": 12.53604, "NZDCAD": 7.21923,
+      "NZDCHF": 12.53604, "CADCHF": 12.53604,
       "XAUUSD": 10, "XAGUSD": 5,
       "WTIUSD": 1, "UKOILUSD": 1, "GER30": 1.17
     };
@@ -301,60 +280,82 @@
       let overrides = JSON.parse(localStorage.getItem("contractOverrides") || "{}");
       return overrides[instrument] || null;
     }
-
     function saveOverride(instrument, contractSize) {
       let overrides = JSON.parse(localStorage.getItem("contractOverrides") || "{}");
       overrides[instrument] = contractSize;
       localStorage.setItem("contractOverrides", JSON.stringify(overrides));
     }
-
-   document.getElementById("instrumentSelect").addEventListener("change", function() {
-  let inst = this.value;
-  if (!inst) return;
-
-  const contractField = document.getElementById("contractSize");
-  let saved = loadOverride(inst);
-
-  if (saved) {
-    contractField.value = saved;
-  } else if (defaults[inst]) {
-    // Only set default if field is empty
-    if (!contractField.value || contractField.value === "0") {
-      contractField.value = defaults[inst].contract;
-    }
-  }
-});
-
+    document.getElementById("instrumentSelect").addEventListener("change", function() {
+      let inst = this.value;
+      if (!inst) return;
+      const contractField = document.getElementById("contractSize");
+      let saved = loadOverride(inst);
+      if (saved) {
+        contractField.value = saved;
+      } else if (defaults[inst]) {
+        if (!contractField.value || contractField.value === "0") {
+          contractField.value = defaults[inst].contract;
+        }
+      }
+    });
 
     function calculate() {
       let balance = parseFloat(document.getElementById('balance').value);
       let instrument = document.getElementById('instrumentSelect').value;
       let contractSize = parseFloat(document.getElementById('contractSize').value);
-      let leverage = parseFloat(document.getElementById('leverage').value);
       let riskMode = document.getElementById('riskMode').value;
       let risk = parseFloat(document.getElementById('risk').value);
       let sl = parseFloat(document.getElementById('sl').value);
-
       if(isNaN(balance) || isNaN(risk) || isNaN(sl) || !instrument){
         document.getElementById('result').innerHTML = "<p>⚠ Please enter all required fields!</p>";
         return;
       }
-
       if (!contractSize && defaults[instrument]) contractSize = defaults[instrument].contract;
       saveOverride(instrument, contractSize);
 
-      let pipValue = pipValues[instrument] || ((defaults[instrument]?.pip || 0.0001) * contractSize);
-      let riskAmount = (riskMode === "percent") ? (balance * risk / 100) : risk;
-      let lotSize = riskAmount / (sl * pipValue);
-      let margin = (!isNaN(leverage) && leverage > 0) ? (contractSize * lotSize) / leverage : null;
-
-      let html = `
-        <p><b>${instrument}</b></p>
-        <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
-        <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
-      `;
-      if (margin !== null) {
-        html += `<p>Margin Required: ${margin.toFixed(2)} USD</p>`;
+      let lotSize, html, riskAmount, riskPercent;
+      if (pipValues[instrument]) {
+        let pipValue = pipValues[instrument];
+        if (riskMode === "percent") {
+          riskAmount = balance * risk / 100;
+          lotSize = riskAmount / (sl * pipValue * contractSize);
+          html = `
+            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
+            <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
+          `;
+        } else {
+          riskAmount = risk;
+          riskPercent = (riskAmount / balance) * 100;
+          lotSize = riskAmount / (sl * pipValue * contractSize);
+          html = `
+            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
+            <p>Risk %: ${riskPercent.toFixed(2)}%</p>
+          `;
+        }
+      } else if (defaults[instrument]) {
+        let pipValue = defaults[instrument].pip;
+        if (riskMode === "percent") {
+          riskAmount = balance * risk / 100;
+          lotSize = riskAmount / (sl * pipValue * contractSize);
+          html = `
+            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
+            <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
+          `;
+        } else {
+          riskAmount = risk;
+          riskPercent = (riskAmount / balance) * 100;
+          lotSize = riskAmount / (sl * pipValue * contractSize);
+          html = `
+            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
+            <p>Risk %: ${riskPercent.toFixed(2)}%</p>
+          `;
+        }
+      } else {
+        html = "<p>Instrument not configured.</p>";
       }
       document.getElementById('result').innerHTML = html;
     }
