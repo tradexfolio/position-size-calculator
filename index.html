@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Position Size Calculator</title>
   <style>
     body {
@@ -148,22 +148,6 @@
     body.light .toggle-switch {
       color: black;
     }
-    /* Search input styling */
-    #instrumentSearch {
-      width: 100%;
-      padding: 8px 10px;
-      margin-top: 12px;
-      border-radius: 8px;
-      border: none;
-      background: #242831;
-      color: white;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-    body.light #instrumentSearch {
-      background: #f5f5f5;
-      color: black;
-    }
   </style>
 </head>
 <body>
@@ -178,13 +162,11 @@
     </div>
     <h2>Position Size Calculator</h2>
     <label>Account Balance (USD)</label>
-    <input type="number" id="balance" placeholder="10000" />
-    <label>Search Instrument</label>
-    <input type="text" id="instrumentSearch" placeholder="Type to search instruments..." autocomplete="off" />
+    <input type="number" id="balance" placeholder="10000">
     <div class="row">
       <div class="col">
         <label>Select Instrument</label>
-        <select id="instrumentSelect" size="10" style="height:auto;">
+        <select id="instrumentSelect">
           <option value=""></option>
           <optgroup label="MTS Instruments">
             <option value="EURUSD">EURUSD</option>
@@ -249,7 +231,7 @@
       </div>
       <div class="col">
         <label>Contract Size</label>
-        <input type="number" id="contractSize" placeholder="" />
+        <input type="number" id="contractSize" placeholder="">
       </div>
     </div>
     <label>Risk Mode + Value</label>
@@ -258,14 +240,13 @@
         <option value="percent">Risk %</option>
         <option value="fixed">Fixed $</option>
       </select>
-      <input type="number" id="risk" placeholder="1" />
+      <input type="number" id="risk" placeholder="1">
     </div>
     <label>Stop Loss (pips / points)</label>
-    <input type="number" id="sl" placeholder="50" />
+    <input type="number" id="sl" placeholder="50">
     <button id="calcBtn">Calculate</button>
     <div class="result" id="result"></div>
   </div>
-
   <script>
     const defaults = {
       "EURUSD": {contract: 100000, pip: 0.0001},
@@ -302,7 +283,6 @@
       overrides[instrument] = contractSize;
       localStorage.setItem("contractOverrides", JSON.stringify(overrides));
     }
-    // When instrument changes, load contract size override or default
     document.getElementById("instrumentSelect").addEventListener("change", function() {
       let inst = this.value;
       if (!inst) return;
@@ -316,7 +296,6 @@
         }
       }
     });
-
     function calculate() {
       let balance = parseFloat(document.getElementById('balance').value);
       let instrument = document.getElementById('instrumentSelect').value;
@@ -377,7 +356,6 @@
       document.getElementById('result').innerHTML = html;
     }
     document.getElementById("calcBtn").addEventListener("click", calculate);
-
     // 🌙 Theme Toggle + Save
     const themeToggle = document.getElementById("themeToggle");
     function applyTheme(light) {
@@ -394,50 +372,6 @@
       let isLight = document.body.classList.toggle("light");
       themeToggle.classList.toggle("active");
       localStorage.setItem("theme", isLight ? "light" : "dark");
-    });
-
-    // Instrument search filter for select with optgroups
-    const instrumentSearch = document.getElementById("instrumentSearch");
-    const instrumentSelect = document.getElementById("instrumentSelect");
-
-    // Store full list of original options for reset
-    const originalOptions = [];
-    for(let i=0; i < instrumentSelect.children.length; i++) {
-      originalOptions.push(instrumentSelect.children[i].cloneNode(true));
-    }
-
-    instrumentSearch.addEventListener("input", () => {
-      let searchTerm = instrumentSearch.value.trim().toLowerCase();
-      // Clear current options
-      instrumentSelect.innerHTML = "";
-      if (!searchTerm) {
-        // Restore original options if search is empty
-        originalOptions.forEach(opt => instrumentSelect.appendChild(opt.cloneNode(true)));
-        return;
-      }
-      // Filter optgroups and options
-      originalOptions.forEach(optgroup => {
-        if (optgroup.tagName === "OPTGROUP") {
-          // Create a new optgroup for filtered options
-          const newOptGroup = document.createElement("optgroup");
-          newOptGroup.label = optgroup.label;
-          // Filter options inside this optgroup
-          const matchedOptions = Array.from(optgroup.children).filter(option =>
-            option.textContent.toLowerCase().includes(searchTerm) || option.value.toLowerCase().includes(searchTerm)
-          );
-          if (matchedOptions.length > 0) {
-            matchedOptions.forEach(opt => newOptGroup.appendChild(opt.cloneNode(true)));
-            instrumentSelect.appendChild(newOptGroup);
-          }
-        } else {
-          // If it's an option outside optgroup (like empty one), check it
-          if (optgroup.tagName === "OPTION") {
-            if (optgroup.textContent.toLowerCase().includes(searchTerm) || optgroup.value.toLowerCase().includes(searchTerm)) {
-              instrumentSelect.appendChild(optgroup.cloneNode(true));
-            }
-          }
-        }
-      });
     });
   </script>
 </body>
