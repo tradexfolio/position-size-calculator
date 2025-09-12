@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Position Size Calculator</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -44,7 +43,7 @@
       border-radius: 20px;
       width: 100%;
       max-width: 480px;
-      box-shadow: 0px 4px 15px rgba(0,0,0,0.4);
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
       position: relative;
     }
     .calculator h2 {
@@ -57,7 +56,8 @@
       margin-top: 12px;
       font-size: 0.9rem;
     }
-    .calculator input, .calculator select {
+    .calculator input,
+    .calculator select {
       width: 100%;
       padding: 10px;
       margin-top: 6px;
@@ -100,7 +100,7 @@
       margin-top: 18px;
       padding: 12px;
       border-radius: 12px;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
       font-size: 1rem;
     }
     .result p {
@@ -149,6 +149,41 @@
     body.light .toggle-switch {
       color: black;
     }
+    /* Custom searchable dropdown styles */
+    .searchable-select {
+      position: relative;
+      width: 100%;
+    }
+    .searchable-select input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #242831;
+      color: white;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    .searchable-select .options-list {
+      position: absolute;
+      top: 100%;
+      width: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+      background: #15181d;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      z-index: 100;
+      display: none;
+    }
+    .searchable-select .option {
+      padding: 8px 10px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .searchable-select .option:hover {
+      background: #343540;
+    }
   </style>
 </head>
 <body>
@@ -164,77 +199,16 @@
     <h2>Position Size Calculator</h2>
     <label>Account Balance (USD)</label>
     <input type="number" id="balance" placeholder="10000" />
-    <div class="row">
-      <div class="col">
-        <label>Select Instrument</label>
-        <select id="instrumentSelect">
-          <option value=""></option>
-          <optgroup label="MTS Instruments">
-            <option value="EURUSD">EURUSD</option>
-            <option value="GBPUSD">GBPUSD</option>
-            <option value="AUDUSD">AUDUSD</option>
-            <option value="GBPJPY">GBPJPY</option>
-            <option value="USDJPY">USDJPY</option>
-            <option value="XAUUSD">XAUUSD (Gold)</option>
-            <option value="NAS100">NAS100 (Nasdaq)</option>
-            <option value="SPX500">S&P500 (US500)</option>
-            <option value="GER30">GER30 / GER40</option>
-          </optgroup>
-          <optgroup label="Forex Majors">
-            <option value="EURUSD">EURUSD</option>
-            <option value="GBPUSD">GBPUSD</option>
-            <option value="AUDUSD">AUDUSD</option>
-            <option value="USDJPY">USDJPY</option>
-            <option value="USDCAD">USDCAD</option>
-            <option value="USDCHF">USDCHF</option>
-            <option value="NZDUSD">NZDUSD</option>
-          </optgroup>
-          <optgroup label="Forex Minors">
-            <option value="EURGBP">EURGBP</option>
-            <option value="EURJPY">EURJPY</option>
-            <option value="EURCHF">EURCHF</option>
-            <option value="EURAUD">EURAUD</option>
-            <option value="EURNZD">EURNZD</option>
-            <option value="EURCAD">EURCAD</option>
-            <option value="GBPJPY">GBPJPY</option>
-            <option value="GBPCHF">GBPCHF</option>
-            <option value="GBPAUD">GBPAUD</option>
-            <option value="GBPCAD">GBPCAD</option>
-            <option value="GBPNZD">GBPNZD</option>
-            <option value="AUDJPY">AUDJPY</option>
-            <option value="AUDNZD">AUDNZD</option>
-            <option value="AUDCAD">AUDCAD</option>
-            <option value="AUDCHF">AUDCHF</option>
-            <option value="NZDJPY">NZDJPY</option>
-            <option value="NZDCAD">NZDCAD</option>
-            <option value="NZDCHF">NZDCHF</option>
-            <option value="CADJPY">CADJPY</option>
-            <option value="CADCHF">CADCHF</option>
-            <option value="CHFJPY">CHFJPY</option>
-          </optgroup>
-          <optgroup label="Metals & Commodities">
-            <option value="XAUUSD">XAUUSD (Gold)</option>
-            <option value="XAGUSD">XAGUSD (Silver)</option>
-            <option value="WTIUSD">WTIUSD (Crude Oil)</option>
-            <option value="UKOILUSD">UKOILUSD (Brent Oil)</option>
-          </optgroup>
-          <optgroup label="Indices">
-            <option value="NAS100">NAS100 (Nasdaq)</option>
-            <option value="SPX500">S&P500 (US500)</option>
-            <option value="GER30">GER30/GER40</option>
-            <option value="US30">US30 (Dow Jones)</option>
-          </optgroup>
-          <optgroup label="Cryptocurrencies">
-            <option value="BTCUSD">BTCUSD (Bitcoin)</option>
-            <option value="ETHUSD">ETHUSD (Ethereum)</option>
-          </optgroup>
-        </select>
-      </div>
-      <div class="col">
-        <label>Contract Size</label>
-        <input type="number" id="contractSize" placeholder="" />
-      </div>
+
+    <label>Select Instrument</label>
+    <div class="searchable-select" id="searchableInstrument">
+      <input type="text" placeholder="Search and select instrument..." autocomplete="off" />
+      <div class="options-list"></div>
     </div>
+
+    <label>Contract Size</label>
+    <input type="number" id="contractSize" placeholder="" />
+
     <label>Risk Mode + Value</label>
     <div class="risk-row">
       <select id="riskMode">
@@ -243,40 +217,182 @@
       </select>
       <input type="number" id="risk" placeholder="1" />
     </div>
+
     <label>Stop Loss (pips / points)</label>
     <input type="number" id="sl" placeholder="50" />
     <button id="calcBtn">Calculate</button>
     <div class="result" id="result"></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
   <script>
     const defaults = {
-      "EURUSD": {contract: 100000, pip: 0.0001},
-      "GBPUSD": {contract: 100000, pip: 0.0001},
-      "AUDUSD": {contract: 100000, pip: 0.0001},
-      "USDJPY": {contract: 100000, pip: 0.01},
-      "GBPJPY": {contract: 100000, pip: 0.01},
-      "XAUUSD": {contract: 100000, pip: 0.1},
-      "XAGUSD": {contract: 5000, pip: 0.01},
-      "US30": {contract: 10, pip: 1},
-      "NAS100": {contract: 10, pip: 1},
-      "SPX500": {contract: 10, pip: 1},
-      "GER30": {contract: 10, pip: 1.17},
-      "BTCUSD": {contract: 1, pip: 1},
-      "ETHUSD": {contract: 1, pip: 1}
+      EURUSD: { contract: 100000, pip: 0.0001 },
+      GBPUSD: { contract: 100000, pip: 0.0001 },
+      AUDUSD: { contract: 100000, pip: 0.0001 },
+      USDJPY: { contract: 100000, pip: 0.01 },
+      GBPJPY: { contract: 100000, pip: 0.01 },
+      XAUUSD: { contract: 100000, pip: 0.1 },
+      XAGUSD: { contract: 5000, pip: 0.01 },
+      US30: { contract: 10, pip: 1 },
+      NAS100: { contract: 10, pip: 1 },
+      SPX500: { contract: 10, pip: 1 },
+      GER30: { contract: 10, pip: 1.17 },
+      BTCUSD: { contract: 1, pip: 1 },
+      ETHUSD: { contract: 1, pip: 1 },
     };
     const pipValues = {
-      "EURUSD": 10, "GBPUSD": 10, "AUDUSD": 10, "NZDUSD": 10, "USDCAD": 7.21923, "USDCHF": 12.53604,
-      "USDJPY": 6.76123, "GBPJPY": 6.76123, "EURJPY": 6.76123, "AUDJPY": 6.76123,
-      "NZDJPY": 6.76123, "CADJPY": 6.76123, "CHFJPY": 6.76123,
-      "EURGBP": 13.541, "EURCHF": 12.53604, "EURAUD": 6.6382, "EURNZD": 5.9459, "EURCAD": 7.21923,
-      "GBPCHF": 12.53604, "GBPAUD": 6.6382, "GBPCAD": 7.21923, "GBPNZD": 5.9459,
-      "AUDNZD": 5.9459, "AUDCAD": 7.21923, "AUDCHF": 12.53604, "NZDCAD": 7.21923,
-      "NZDCHF": 12.53604, "CADCHF": 12.53604,
-      "XAUUSD": 10, "XAGUSD": 5,
-      "WTIUSD": 1, "UKOILUSD": 1, "GER30": 1.17
+      EURUSD: 10,
+      GBPUSD: 10,
+      AUDUSD: 10,
+      NZDUSD: 10,
+      USDCAD: 7.21923,
+      USDCHF: 12.53604,
+      USDJPY: 6.76123,
+      GBPJPY: 6.76123,
+      EURJPY: 6.76123,
+      AUDJPY: 6.76123,
+      NZDJPY: 6.76123,
+      CADJPY: 6.76123,
+      CHFJPY: 6.76123,
+      EURGBP: 13.541,
+      EURCHF: 12.53604,
+      EURAUD: 6.6382,
+      EURNZD: 5.9459,
+      EURCAD: 7.21923,
+      GBPCHF: 12.53604,
+      GBPAUD: 6.6382,
+      GBPCAD: 7.21923,
+      GBPNZD: 5.9459,
+      AUDNZD: 5.9459,
+      AUDCAD: 7.21923,
+      AUDCHF: 12.53604,
+      NZDCAD: 7.21923,
+      NZDCHF: 12.53604,
+      CADCHF: 12.53604,
+      XAUUSD: 10,
+      XAGUSD: 5,
+      WTIUSD: 1,
+      UKOILUSD: 1,
+      GER30: 1.17,
     };
+
+    // Instrument list with grouping & display name
+    const instrumentList = [
+      { group: "MTS Instruments", symbols: ["EURUSD", "GBPUSD", "AUDUSD", "GBPJPY", "USDJPY", "XAUUSD", "NAS100", "SPX500", "GER30"] },
+      { group: "Forex Majors", symbols: ["EURUSD", "GBPUSD", "AUDUSD", "USDJPY", "USDCAD", "USDCHF", "NZDUSD"] },
+      {
+        group: "Forex Minors",
+        symbols: [
+          "EURGBP",
+          "EURJPY",
+          "EURCHF",
+          "EURAUD",
+          "EURNZD",
+          "EURCAD",
+          "GBPJPY",
+          "GBPCHF",
+          "GBPAUD",
+          "GBPCAD",
+          "GBPNZD",
+          "AUDJPY",
+          "AUDNZD",
+          "AUDCAD",
+          "AUDCHF",
+          "NZDJPY",
+          "NZDCAD",
+          "NZDCHF",
+          "CADJPY",
+          "CADCHF",
+          "CHFJPY",
+        ],
+      },
+      { group: "Metals & Commodities", symbols: ["XAUUSD", "XAGUSD", "WTIUSD", "UKOILUSD"] },
+      { group: "Indices", symbols: ["NAS100", "SPX500", "GER30", "US30"] },
+      { group: "Cryptocurrencies", symbols: ["BTCUSD", "ETHUSD"] },
+    ];
+
+    // Flatten instruments with display names for search
+    const flatInstruments = [];
+    instrumentList.forEach((grp) => {
+      grp.symbols.forEach((sym) => {
+        let displayName = sym;
+        if (sym === "XAUUSD") displayName = "XAUUSD (Gold)";
+        else if (sym === "XAGUSD") displayName = "XAGUSD (Silver)";
+        else if (sym === "WTIUSD") displayName = "WTIUSD (Crude Oil)";
+        else if (sym === "UKOILUSD") displayName = "UKOILUSD (Brent Oil)";
+        else if (sym === "NAS100") displayName = "NAS100 (Nasdaq)";
+        else if (sym === "SPX500") displayName = "S&P500 (US500)";
+        else if (sym === "GER30") displayName = "GER30/GER40";
+        else if (sym === "US30") displayName = "US30 (Dow Jones)";
+        else if (sym === "BTCUSD") displayName = "BTCUSD (Bitcoin)";
+        else if (sym === "ETHUSD") displayName = "ETHUSD (Ethereum)";
+
+        flatInstruments.push({ symbol: sym, displayName, group: grp.group });
+      });
+    });
+
+    const searchableInstrument = document.getElementById("searchableInstrument");
+    const input = searchableInstrument.querySelector("input");
+    const optionsList = searchableInstrument.querySelector(".options-list");
+
+    function showOptions(filteredOptions) {
+      optionsList.innerHTML = "";
+      if (filteredOptions.length === 0) {
+        const noOption = document.createElement("div");
+        noOption.classList.add("option");
+        noOption.textContent = "No instruments found";
+        optionsList.appendChild(noOption);
+      } else {
+        filteredOptions.forEach((opt) => {
+          let optionDiv = document.createElement("div");
+          optionDiv.classList.add("option");
+          optionDiv.textContent = `${opt.displayName} [${opt.group}]`;
+          optionDiv.dataset.symbol = opt.symbol;
+          optionsList.appendChild(optionDiv);
+        });
+      }
+      optionsList.style.display = "block";
+    }
+
+    function filterOptions(value) {
+      const lowerValue = value.toLowerCase();
+      return flatInstruments.filter((item) =>
+        item.displayName.toLowerCase().includes(lowerValue) || item.symbol.toLowerCase().includes(lowerValue)
+      );
+    }
+
+    input.addEventListener("input", function () {
+      const value = this.value.trim();
+      if (value.length === 0) {
+        optionsList.style.display = "none";
+        return;
+      }
+      const filtered = filterOptions(value);
+      showOptions(filtered);
+    });
+
+    input.addEventListener("focus", () => {
+      if (input.value.trim().length > 0) {
+        showOptions(filterOptions(input.value.trim()));
+      }
+    });
+
+    input.addEventListener("blur", () => {
+      // Delay hiding to allow click selection
+      setTimeout(() => {
+        optionsList.style.display = "none";
+      }, 150);
+    });
+
+    optionsList.addEventListener("click", (e) => {
+      const target = e.target;
+      if (target.classList.contains("option") && target.dataset.symbol) {
+        input.value = target.dataset.symbol;
+        optionsList.style.display = "none";
+        onInstrumentChange(target.dataset.symbol);
+      }
+    });
+
     function loadOverride(instrument) {
       let overrides = JSON.parse(localStorage.getItem("contractOverrides") || "{}");
       return overrides[instrument] || null;
@@ -286,40 +402,55 @@
       overrides[instrument] = contractSize;
       localStorage.setItem("contractOverrides", JSON.stringify(overrides));
     }
-    document.getElementById("instrumentSelect").addEventListener("change", function() {
-      let inst = this.value;
+
+    // When instrument changes by user input or selection
+    function onInstrumentChange(inst) {
       if (!inst) return;
       const contractField = document.getElementById("contractSize");
       let saved = loadOverride(inst);
       if (saved) {
         contractField.value = saved;
       } else if (defaults[inst]) {
-        if (!contractField.value || contractField.value === "0") {
-          contractField.value = defaults[inst].contract;
-        }
+        contractField.value = defaults[inst].contract;
+      } else {
+        contractField.value = "";
+      }
+    }
+
+    document.getElementById("contractSize").addEventListener("input", function () {
+      const inst = input.value.trim();
+      if (inst && this.value) {
+        saveOverride(inst, parseFloat(this.value));
       }
     });
+
+    // Calculate logic with updated instrument input
     function calculate() {
-      let balance = parseFloat(document.getElementById('balance').value);
-      let instrument = document.getElementById('instrumentSelect').value;
-      let contractSize = parseFloat(document.getElementById('contractSize').value);
-      let riskMode = document.getElementById('riskMode').value;
-      let risk = parseFloat(document.getElementById('risk').value);
-      let sl = parseFloat(document.getElementById('sl').value);
-      if(isNaN(balance) || isNaN(risk) || isNaN(sl) || !instrument){
-        document.getElementById('result').innerHTML = "<p>⚠ Please enter all required fields!</p>";
+      let balance = parseFloat(document.getElementById("balance").value);
+      let instrument = input.value.trim();
+      let contractSize = parseFloat(document.getElementById("contractSize").value);
+      let riskMode = document.getElementById("riskMode").value;
+      let risk = parseFloat(document.getElementById("risk").value);
+      let sl = parseFloat(document.getElementById("sl").value);
+
+      if (isNaN(balance) || isNaN(risk) || isNaN(sl) || !instrument) {
+        document.getElementById("result").innerHTML = "<p>⚠ Please enter all required fields!</p>";
         return;
       }
+
       if (!contractSize && defaults[instrument]) contractSize = defaults[instrument].contract;
+
       saveOverride(instrument, contractSize);
+
       let lotSize, html, riskAmount, riskPercent;
+
       if (pipValues[instrument]) {
         let pipValue = pipValues[instrument];
         if (riskMode === "percent") {
-          riskAmount = balance * risk / 100;
+          riskAmount = (balance * risk) / 100;
           lotSize = riskAmount / (sl * pipValue * contractSize);
           html = `
-            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p><b>${instrument.replace(/[0-9]/g, "")}</b></p>
             <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
             <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
           `;
@@ -328,7 +459,7 @@
           riskPercent = (riskAmount / balance) * 100;
           lotSize = riskAmount / (sl * pipValue * contractSize);
           html = `
-            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p><b>${instrument.replace(/[0-9]/g, "")}</b></p>
             <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
             <p>Risk %: ${riskPercent.toFixed(2)}%</p>
           `;
@@ -336,10 +467,10 @@
       } else if (defaults[instrument]) {
         let pipValue = defaults[instrument].pip;
         if (riskMode === "percent") {
-          riskAmount = balance * risk / 100;
+          riskAmount = (balance * risk) / 100;
           lotSize = riskAmount / (sl * pipValue * contractSize);
           html = `
-            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p><b>${instrument.replace(/[0-9]/g, "")}</b></p>
             <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
             <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
           `;
@@ -348,7 +479,7 @@
           riskPercent = (riskAmount / balance) * 100;
           lotSize = riskAmount / (sl * pipValue * contractSize);
           html = `
-            <p><b>${instrument.replace(/[0-9]/g, '')}</b></p>
+            <p><b>${instrument.replace(/[0-9]/g, "")}</b></p>
             <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
             <p>Risk %: ${riskPercent.toFixed(2)}%</p>
           `;
@@ -356,9 +487,15 @@
       } else {
         html = "<p>Instrument not configured.</p>";
       }
-      document.getElementById('result').innerHTML = html;
+      document.getElementById("result").innerHTML = html;
     }
+
     document.getElementById("calcBtn").addEventListener("click", calculate);
+
+    // Initialize contract size if user starts typing instrument
+    input.addEventListener("change", () => {
+      onInstrumentChange(input.value.trim());
+    });
 
     // 🌙 Theme Toggle + Save
     const themeToggle = document.getElementById("themeToggle");
@@ -376,19 +513,6 @@
       let isLight = document.body.classList.toggle("light");
       themeToggle.classList.toggle("active");
       localStorage.setItem("theme", isLight ? "light" : "dark");
-    });
-
-    // Enable Choices.js (searchable dropdown)
-    document.addEventListener('DOMContentLoaded', function() {
-      const instrumentSelect = document.getElementById('instrumentSelect');
-      const choices = new Choices(instrumentSelect, {
-        searchEnabled: true,
-        shouldSort: false,
-        itemSelectText: '', // Optional: removes "Press to select" text
-        placeholder: true,
-        searchPlaceholderValue: "Type or search instrument...",
-      });
-      // Choices.js is purely cosmetic; onchange events still fire as normal
     });
   </script>
 </body>
