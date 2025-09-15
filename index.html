@@ -326,11 +326,17 @@
         lotSize = riskAmount / (sl * pipValue);
       }
 
-      let html = `
-        <p><b>${instrument.replace(/[0-9]/g, "")}</b></p>
-        <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
-        <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
-      `;
+      // Build output
+      let html = `<p><b>${instrument}</b></p>`;
+      html += `<p>Lot Size: ${lotSize.toFixed(2)} lots</p>`;
+
+      if (riskMode === "percent") {
+        html += `<p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>`;
+      } else {
+        let riskPercent = (riskAmount / balance) * 100;
+        html += `<p>Risk %: ${riskPercent.toFixed(2)}%</p>`;
+      }
+
       document.getElementById("result").innerHTML = html;
     }
 
