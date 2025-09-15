@@ -327,7 +327,7 @@
 
       let html = `
         <p><b>${instrument.replace(/[0-9]/g, "")}</b></p>
-        <p>Lot Size: ${lotSize.toFixed(4)} lots</p>
+        <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
         <p>Risk Amount: ${riskAmount.toFixed(2)} USD</p>
       `;
       document.getElementById("result").innerHTML = html;
