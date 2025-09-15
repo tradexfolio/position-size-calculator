@@ -105,7 +105,6 @@
     .result p {
       margin: 6px 0;
     }
-    /* 🌙 Toggle Switch */
     .toggle-container {
       position: absolute;
       top: 15px;
@@ -152,7 +151,6 @@
 </head>
 <body>
   <div class="calculator">
-    <!-- 🌙 Toggle Switch -->
     <div class="toggle-container">
       <div id="themeToggle" class="toggle-switch">
         <span>☀</span>
@@ -336,9 +334,10 @@
       let lotSize, html, riskAmount, riskPercent;
       if (pipValues[instrument]) {
         let pipValue = pipValues[instrument];
+        let usedContractSize = contractSize || 1;
         if (riskMode === "percent") {
           riskAmount = (balance * risk) / 100;
-          lotSize = riskAmount / (sl * pipValue); // Updated here: removed contractSize
+          lotSize = riskAmount / (sl * pipValue * usedContractSize); // <-- now uses contractSize
           html = `
             <p><b>${instrument.replace(/[0-9]/g, "")}</b></p>
             <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
@@ -347,7 +346,7 @@
         } else {
           riskAmount = risk;
           riskPercent = (riskAmount / balance) * 100;
-          lotSize = riskAmount / (sl * pipValue); // Updated here: removed contractSize
+          lotSize = riskAmount / (sl * pipValue * usedContractSize); // <-- now uses contractSize
           html = `
             <p><b>${instrument.replace(/[0-9]/g, "")}</b></p>
             <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
@@ -356,9 +355,10 @@
         }
       } else if (defaults[instrument]) {
         let pipValue = defaults[instrument].pip;
+        let usedContractSize = contractSize || 1;
         if (riskMode === "percent") {
           riskAmount = (balance * risk) / 100;
-          lotSize = riskAmount / (sl * pipValue); // Updated here: removed contractSize
+          lotSize = riskAmount / (sl * pipValue * usedContractSize);
           html = `
             <p><b>${instrument.replace(/[0-9]/g, "")}</b></p>
             <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
@@ -367,7 +367,7 @@
         } else {
           riskAmount = risk;
           riskPercent = (riskAmount / balance) * 100;
-          lotSize = riskAmount / (sl * pipValue); // Updated here: removed contractSize
+          lotSize = riskAmount / (sl * pipValue * usedContractSize);
           html = `
             <p><b>${instrument.replace(/[0-9]/g, "")}</b></p>
             <p>Lot Size: ${lotSize.toFixed(2)} lots</p>
